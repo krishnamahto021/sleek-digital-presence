@@ -1,70 +1,22 @@
 
-import React, { useRef, Suspense } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Sphere, MeshDistortMaterial } from '@react-three/drei';
+import React, { useRef } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 import { useTheme } from '../contexts/ThemeContext';
-import * as THREE from 'three';
 
-// Animated mesh component
-const AnimatedSphere = () => {
-  const mesh = useRef<THREE.Mesh>(null!);
-  
+// Main Three.js component
+const ThreeDHero = () => {
   const { theme } = useTheme();
   
   // Colors for light/dark themes
   const color = theme === 'light' ? '#1976d2' : '#4dd0e1';
-  const emissive = theme === 'light' ? '#1565c0' : '#00bcd4';
-
-  // Animate the mesh on each frame
-  useFrame(() => {
-    if (!mesh.current) return;
-    mesh.current.rotation.x = mesh.current.rotation.y += 0.005;
-  });
   
   return (
-    <Sphere ref={mesh} args={[1, 100, 200]} scale={2.5}>
-      <MeshDistortMaterial
-        color={color}
-        emissive={emissive}
-        attach="material"
-        distort={0.4}
-        speed={2}
-        roughness={0.2}
-        metalness={0.8}
-      />
-    </Sphere>
-  );
-};
-
-// Fallback component in case of errors
-const ErrorFallback = () => {
-  return (
-    <mesh>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="hotpink" />
-    </mesh>
-  );
-};
-
-// Main Three.js component
-const ThreeDHero = () => {
-  return (
-    <div className="canvas-container">
-      <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
-        <Suspense fallback={<ErrorFallback />}>
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[10, 10, 5]} intensity={1} />
-          <pointLight position={[-10, -10, -5]} intensity={0.5} color="#4dd0e1" />
-          <AnimatedSphere />
-          <OrbitControls 
-            enableZoom={false} 
-            enablePan={false}
-            rotateSpeed={0.5}
-            autoRotate
-            autoRotateSpeed={0.5}
-          />
-        </Suspense>
-      </Canvas>
+    <div className="canvas-container relative w-full h-full absolute inset-0 z-0">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background opacity-90"></div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-64 h-64 rounded-full bg-primary/20 animate-pulse filter blur-xl"></div>
+      </div>
     </div>
   );
 };
