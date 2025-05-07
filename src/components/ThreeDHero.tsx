@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Sphere, MeshDistortMaterial } from '@react-three/drei';
 import { useTheme } from '../contexts/ThemeContext';
@@ -36,22 +36,34 @@ const AnimatedSphere = () => {
   );
 };
 
+// Fallback component in case of errors
+const ErrorFallback = () => {
+  return (
+    <mesh>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color="hotpink" />
+    </mesh>
+  );
+};
+
 // Main Three.js component
 const ThreeDHero = () => {
   return (
     <div className="canvas-container">
       <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 10, 5]} intensity={1} />
-        <pointLight position={[-10, -10, -5]} intensity={0.5} color="#4dd0e1" />
-        <AnimatedSphere />
-        <OrbitControls 
-          enableZoom={false} 
-          enablePan={false}
-          rotateSpeed={0.5}
-          autoRotate
-          autoRotateSpeed={0.5}
-        />
+        <Suspense fallback={<ErrorFallback />}>
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[10, 10, 5]} intensity={1} />
+          <pointLight position={[-10, -10, -5]} intensity={0.5} color="#4dd0e1" />
+          <AnimatedSphere />
+          <OrbitControls 
+            enableZoom={false} 
+            enablePan={false}
+            rotateSpeed={0.5}
+            autoRotate
+            autoRotateSpeed={0.5}
+          />
+        </Suspense>
       </Canvas>
     </div>
   );
