@@ -1,0 +1,43 @@
+
+[
+  {
+    "id": "project-1",
+    "title": "E-commerce Platform",
+    "description": "A full-featured e-commerce platform built with React, Node.js, and MongoDB. Features include product listings, shopping cart, user authentication, and payment processing.",
+    "image": "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+    "tags": ["React", "Node.js", "MongoDB", "Express", "Redux"],
+    "sourceUrl": "https://github.com/alexmorgan/ecommerce-platform",
+    "demoUrl": "https://ecommerce-demo.alexmorgan.dev",
+    "featured": true
+  },
+  {
+    "id": "project-2",
+    "title": "Task Management App",
+    "description": "A productivity application for managing tasks and projects. Built with React, TypeScript, and Firebase with real-time updates and team collaboration features.",
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f",
+    "tags": ["React", "TypeScript", "Firebase", "Material UI"],
+    "sourceUrl": "https://github.com/alexmorgan/task-manager",
+    "demoUrl": "https://taskmanager.alexmorgan.dev",
+    "featured": true
+  },
+  {
+    "id": "project-3",
+    "title": "Weather Dashboard",
+    "description": "A modern weather application that provides detailed forecasts, interactive maps, and location-based services using various weather APIs.",
+    "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
+    "tags": ["React", "OpenWeather API", "Mapbox", "Tailwind CSS"],
+    "sourceUrl": "https://github.com/alexmorgan/weather-dashboard",
+    "demoUrl": "https://weather.alexmorgan.dev",
+    "featured": true
+  },
+  {
+    "id": "project-4",
+    "title": "Personal Blog Platform",
+    "description": "A customizable blog platform with markdown support, tag management, and user authentication. Features a modern, responsive design and SEO optimization.",
+    "image": "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+    "tags": ["Next.js", "Prisma", "PostgreSQL", "Tailwind CSS"],
+    "sourceUrl": "https://github.com/alexmorgan/blog-platform",
+    "demoUrl": "https://blog.alexmorgan.dev",
+    "featured": false
+  }
+]

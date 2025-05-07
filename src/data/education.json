@@ -1,0 +1,19 @@
+
+[
+  {
+    "institution": "University of California, Berkeley",
+    "degree": "Bachelor of Science",
+    "field": "Computer Science",
+    "startDate": "2014-09",
+    "endDate": "2018-05",
+    "description": "Graduated with honors. Specialized in web technologies and artificial intelligence."
+  },
+  {
+    "institution": "Codecademy Pro",
+    "degree": "Certification",
+    "field": "Full Stack Web Development",
+    "startDate": "2018-06",
+    "endDate": "2018-12",
+    "description": "Completed intensive full stack development program."
+  }
+]

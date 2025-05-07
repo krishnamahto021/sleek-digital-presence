@@ -1,0 +1,45 @@
+
+[
+  {
+    "title": "Senior Frontend Developer",
+    "company": "Tech Innovations Inc.",
+    "location": "San Francisco, CA",
+    "startDate": "2021-06",
+    "endDate": "Present",
+    "description": "Lead frontend developer for multiple enterprise SaaS products",
+    "responsibilities": [
+      "Architected and implemented a complex dashboard application using React and TypeScript",
+      "Improved application performance by 40% through code optimization and lazy loading",
+      "Led a team of 5 developers and established best practices for frontend development",
+      "Collaborated with UX/UI designers to implement responsive and accessible interfaces"
+    ]
+  },
+  {
+    "title": "Full Stack Developer",
+    "company": "Digital Solutions LLC",
+    "location": "Seattle, WA",
+    "startDate": "2019-03",
+    "endDate": "2021-05",
+    "description": "Full stack developer for a growing tech startup",
+    "responsibilities": [
+      "Developed and maintained multiple client projects using React, Node.js and MongoDB",
+      "Implemented authentication and authorization systems for secure applications",
+      "Built RESTful APIs with Express.js that powered mobile and web applications",
+      "Collaborated with cross-functional teams to deliver high-quality solutions on schedule"
+    ]
+  },
+  {
+    "title": "Junior Web Developer",
+    "company": "Creative Web Agency",
+    "location": "Portland, OR",
+    "startDate": "2018-01",
+    "endDate": "2019-02",
+    "description": "Front-end developer for client websites and applications",
+    "responsibilities": [
+      "Developed responsive websites for clients across various industries",
+      "Converted design mockups into functional websites using HTML, CSS, and JavaScript",
+      "Implemented interactive features using jQuery and vanilla JavaScript",
+      "Maintained existing client websites and implemented requested features"
+    ]
+  }
+]

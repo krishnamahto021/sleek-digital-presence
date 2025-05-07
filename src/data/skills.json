@@ -1,0 +1,99 @@
+
+[
+  {
+    "name": "React",
+    "level": 95,
+    "category": "frontend",
+    "description": "Advanced knowledge of React, including hooks, context API, and state management"
+  },
+  {
+    "name": "TypeScript",
+    "level": 90,
+    "category": "frontend",
+    "description": "Strong typing skills with TypeScript for building scalable applications"
+  },
+  {
+    "name": "JavaScript",
+    "level": 95,
+    "category": "frontend",
+    "description": "Expert knowledge of modern JavaScript (ES6+)"
+  },
+  {
+    "name": "HTML/CSS",
+    "level": 90,
+    "category": "frontend",
+    "description": "Strong foundation in semantic HTML and advanced CSS techniques"
+  },
+  {
+    "name": "Tailwind CSS",
+    "level": 85,
+    "category": "frontend",
+    "description": "Experience with utility-first CSS frameworks for rapid development"
+  },
+  {
+    "name": "Material UI",
+    "level": 85,
+    "category": "frontend",
+    "description": "Expertise in Material UI component library for React applications"
+  },
+  {
+    "name": "Three.js",
+    "level": 75,
+    "category": "frontend",
+    "description": "Implementation of 3D graphics in web applications"
+  },
+  {
+    "name": "Node.js",
+    "level": 85,
+    "category": "backend",
+    "description": "Building scalable server-side applications with Node.js"
+  },
+  {
+    "name": "Express",
+    "level": 80,
+    "category": "backend",
+    "description": "Creating RESTful APIs with Express.js framework"
+  },
+  {
+    "name": "MongoDB",
+    "level": 80,
+    "category": "backend",
+    "description": "NoSQL database design and operations"
+  },
+  {
+    "name": "PostgreSQL",
+    "level": 75,
+    "category": "backend",
+    "description": "SQL database design and management"
+  },
+  {
+    "name": "GraphQL",
+    "level": 70,
+    "category": "backend",
+    "description": "Building APIs with GraphQL for efficient data fetching"
+  },
+  {
+    "name": "Docker",
+    "level": 70,
+    "category": "tools",
+    "description": "Containerization of applications for consistent deployment"
+  },
+  {
+    "name": "Git",
+    "level": 90,
+    "category": "tools",
+    "description": "Version control and collaborative development workflows"
+  },
+  {
+    "name": "AWS",
+    "level": 75,
+    "category": "tools",
+    "description": "Cloud deployment and management using various AWS services"
+  },
+  {
+    "name": "CI/CD",
+    "level": 75,
+    "category": "tools",
+    "description": "Automated testing and deployment pipelines"
+  }
+]
