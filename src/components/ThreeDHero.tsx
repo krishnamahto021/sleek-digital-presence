@@ -39,6 +39,41 @@ const CanvasFallback = () => {
   );
 };
 
+// Define the prop and state types for ErrorBoundary
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+  onError: () => void;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+}
+
+// Simple error boundary component to catch Three.js errors
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+    if (this.props.onError) {
+      this.props.onError();
+    }
+  }
+
+  render(): React.ReactNode {
+    if (this.state.hasError) {
+      return null; // Return nothing, the fallback will be shown
+    }
+    return this.props.children;
+  }
+}
+
 // Main Three.js component
 const ThreeDHero = () => {
   // State to track if rendering fails
@@ -79,30 +114,5 @@ const ThreeDHero = () => {
     </div>
   );
 };
-
-// Simple error boundary component to catch Three.js errors
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    if (this.props.onError) {
-      this.props.onError();
-    }
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return null; // Return nothing, the fallback will be shown
-    }
-    return this.props.children;
-  }
-}
 
 export default ThreeDHero;
