@@ -18,7 +18,7 @@ const AnimatedShapes = () => {
   };
   
   return (
-    <group>
+    <>
       {/* Main sphere in the center */}
       <Sphere args={[1, 32, 32]} position={[0, 0, 0]}>
         <meshStandardMaterial 
@@ -70,7 +70,7 @@ const AnimatedShapes = () => {
           flatShading={true}
         />
       </Icosahedron>
-    </group>
+    </>
   );
 };
 

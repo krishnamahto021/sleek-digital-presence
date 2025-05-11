@@ -13,9 +13,9 @@ import Footer from '../components/Footer';
 const Index = () => {
   return (
     <DataProvider>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col relative">
         <Navbar />
-        <main>
+        <main className="relative">
           <HeroSection />
           <AboutSection />
           <ProjectsSection />
