@@ -12,7 +12,7 @@ const HeroSection = () => {
 
   return (
     <section id="hero" className="min-h-screen flex items-center relative">
-      {/* Background */}
+      {/* 3D Background */}
       <ThreeDHero />
       
       <div className="container mx-auto relative z-10">
