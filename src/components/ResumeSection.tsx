@@ -1,26 +1,25 @@
-
-import React from 'react';
-import { motion } from 'framer-motion';
-import { useData } from '../contexts/DataContext';
-import { FileText, Calendar, Briefcase, Book } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { motion } from "framer-motion";
+import { useData } from "../contexts/DataContext";
+import { FileText, Calendar, Briefcase, Book } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const ResumeSection = () => {
   const { bio, experience, education } = useData();
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      year: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
     });
   };
 
@@ -31,7 +30,12 @@ const ResumeSection = () => {
 
         <div className="flex flex-col items-center mb-12">
           <Button size="lg" className="flex items-center gap-2" asChild>
-            <a href={bio.resume} target="_blank" rel="noopener noreferrer">
+            <a
+              href="/krishnaMahato.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              download={`resume.pdf`}
+            >
               <FileText size={18} />
               Download Full Resume
             </a>
@@ -49,7 +53,7 @@ const ResumeSection = () => {
               Education
             </TabsTrigger>
           </TabsList>
-          
+
           {/* Experience Tab */}
           <TabsContent value="experience">
             <div className="space-y-6">
@@ -72,7 +76,10 @@ const ResumeSection = () => {
                         </div>
                         <div className="flex items-center text-sm text-muted-foreground">
                           <Calendar size={14} className="mr-1" />
-                          {formatDate(exp.startDate)} - {exp.endDate === 'Present' ? exp.endDate : formatDate(exp.endDate)}
+                          {formatDate(exp.startDate)} -{" "}
+                          {exp.endDate === "Present"
+                            ? exp.endDate
+                            : formatDate(exp.endDate)}
                         </div>
                       </div>
                     </CardHeader>
@@ -91,7 +98,7 @@ const ResumeSection = () => {
               ))}
             </div>
           </TabsContent>
-          
+
           {/* Education Tab */}
           <TabsContent value="education">
             <div className="space-y-6">
@@ -114,14 +121,17 @@ const ResumeSection = () => {
                         </div>
                         <div className="flex items-center text-sm text-muted-foreground">
                           <Calendar size={14} className="mr-1" />
-                          {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
+                          {formatDate(edu.startDate)} -{" "}
+                          {formatDate(edu.endDate)}
                         </div>
                       </div>
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm">{edu.field}</p>
                       {edu.description && (
-                        <p className="mt-2 text-sm text-muted-foreground">{edu.description}</p>
+                        <p className="mt-2 text-sm text-muted-foreground">
+                          {edu.description}
+                        </p>
                       )}
                     </CardContent>
                   </Card>
