@@ -23,7 +23,7 @@ const TechLabel = ({ position, text, color, rotationSpeed = 0.01 }) => {
         position={[0, 0, 0] as [number, number, number]}
         color={color}
         fontSize={0.5}
-        font="/fonts/Inter-Bold.woff"
+        // Remove the custom font and use the default font instead
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.05}
