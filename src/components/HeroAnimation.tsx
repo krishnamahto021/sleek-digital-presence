@@ -14,6 +14,8 @@ const TechLabel = ({ position, text, color, rotationSpeed = 0.01 }) => {
     if (groupRef.current) {
       // Clockwise rotation around the center
       groupRef.current.rotation.y -= rotationSpeed;
+      // Added x-y plane rotation
+      groupRef.current.rotation.z -= rotationSpeed * 0.5;
     }
   });
 
@@ -22,13 +24,13 @@ const TechLabel = ({ position, text, color, rotationSpeed = 0.01 }) => {
       <Text
         position={[0, 0, 0] as [number, number, number]}
         color={color}
-        fontSize={0.5}
+        fontSize={0.3} // Reduced text size from 0.5 to 0.3
         // Remove the custom font and use the default font instead
         anchorX="center"
         anchorY="middle"
-        outlineWidth={0.05}
+        outlineWidth={0.03} // Reduced outline to match smaller text
         outlineColor="#000000"
-        outlineOpacity={0.8}
+        outlineOpacity={0.5} // Reduced opacity for lighter outline
         fillOpacity={1}
       >
         {text}
@@ -210,8 +212,8 @@ const HeroAnimation = () => {
   return (
     <div className="h-full w-full">
       <Canvas camera={{ position: [0, 0, 8] as [number, number, number], fov: 50 }}>
-        {/* Subtle background color */}
-        <color attach="background" args={[theme === "dark" ? "#000000" : "#ffffff"]} />
+        {/* Transparent background instead of black */}
+        <color attach="background" args={[theme === "dark" ? "transparent" : "transparent"]} />
         
         {/* Lighting to enhance visibility */}
         <ambientLight intensity={0.7} />
