@@ -143,63 +143,63 @@ const OrbitingTechLabels = () => {
     <group>
       {/* Place tech labels in a circular pattern around the center */}
       <TechLabel 
-        position={[2, 0, 0]} 
+        position={[2, 0, 0] as [number, number, number]} 
         text="JavaScript" 
         color={primaryColor} 
         rotationSpeed={0.008} 
       />
       
       <TechLabel 
-        position={[1.4, 1.4, 0]} 
+        position={[1.4, 1.4, 0] as [number, number, number]} 
         text="TypeScript" 
         color={secondaryColor} 
         rotationSpeed={0.01} 
       />
       
       <TechLabel 
-        position={[0, 2, 0]} 
+        position={[0, 2, 0] as [number, number, number]} 
         text="React" 
         color={primaryColor} 
         rotationSpeed={0.012} 
       />
       
       <TechLabel 
-        position={[-1.4, 1.4, 0]} 
+        position={[-1.4, 1.4, 0] as [number, number, number]} 
         text="Node.js" 
         color={secondaryColor} 
         rotationSpeed={0.009} 
       />
       
       <TechLabel 
-        position={[-2, 0, 0]} 
+        position={[-2, 0, 0] as [number, number, number]} 
         text="AWS" 
         color={tertiaryColor} 
         rotationSpeed={0.011} 
       />
       
       <TechLabel 
-        position={[-1.4, -1.4, 0]} 
+        position={[-1.4, -1.4, 0] as [number, number, number]} 
         text="MongoDB" 
         color={primaryColor} 
         rotationSpeed={0.007} 
       />
       
       <TechLabel 
-        position={[0, -2, 0]} 
+        position={[0, -2, 0] as [number, number, number]} 
         text="Git" 
         color={secondaryColor} 
         rotationSpeed={0.013} 
       />
       
       <TechLabel 
-        position={[1.4, -1.4, 0]} 
+        position={[1.4, -1.4, 0] as [number, number, number]} 
         text="Redux" 
         color={tertiaryColor} 
         rotationSpeed={0.01} 
       />
       
       {/* Central atom */}
-      <AtomComponent position={[0, 0, 0]} />
+      <AtomComponent position={[0, 0, 0] as [number, number, number]} />
     </group>
   );
 };
@@ -211,7 +211,7 @@ const HeroAnimation = () => {
     <div className="h-full w-full">
       <Canvas camera={{ position: [0, 0, 8], fov: 50 }}>
         {/* Subtle background color */}
-        <color attach="background" args={[theme === "dark" ? "transparent" : "transparent"]} />
+        <color attach="background" args={[theme === "dark" ? "#00000000" : "#00000000"]} />
         
         {/* Lighting to enhance visibility */}
         <ambientLight intensity={0.7} />
