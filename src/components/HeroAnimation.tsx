@@ -6,221 +6,135 @@ import * as THREE from "three";
 import { Text } from "@react-three/drei";
 import { Code, CodeXml, Terminal, FileJson, Github } from "lucide-react";
 
-// Component for text labels with improved visibility
-const TechLabel = ({ position, text, color, rotationSpeed = 0.01 }) => {
-  const groupRef = useRef<THREE.Group>(null);
+// Helper component for tech icons
+const TechIcon = ({ position, icon, size = 1, rotationSpeed = 0.01 }) => {
+  const meshRef = useRef<THREE.Mesh>(null);
+  
+  useFrame(() => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += rotationSpeed;
+    }
+  });
+
+  // Create a canvas texture for the icon
+  const texture = React.useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 256;
+    canvas.height = 256;
+    const ctx = canvas.getContext("2d");
+    
+    if (ctx) {
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, 256, 256);
+      
+      // This would be where we'd draw the icon, but we'll use Text instead
+    }
+    
+    const texture = new THREE.CanvasTexture(canvas);
+    return texture;
+  }, []);
+
+  return (
+    <mesh ref={meshRef} position={position}>
+      <planeGeometry args={[size, size]} />
+      <meshStandardMaterial 
+        color="#ffffff" 
+        transparent 
+        opacity={0.9}
+        map={texture} 
+      />
+    </mesh>
+  );
+};
+
+// Component for text labels
+const TechLabel = ({ position, text, color }) => {
+  return (
+    <Text
+      position={position}
+      color={color}
+      fontSize={0.4}
+      anchorX="center"
+      anchorY="middle"
+      outlineWidth={0.02}
+      outlineColor="#000000"
+      outlineOpacity={0.8}
+    >
+      {text}
+    </Text>
+  );
+};
+
+// Floating animation for tech icons
+const FloatingIcon = ({ children, position, speed = 1 }) => {
+  const group = useRef<THREE.Group>(null);
+  const initialY = position[1];
   
   useFrame(({ clock }) => {
-    if (groupRef.current) {
-      // Clockwise rotation around the center
-      groupRef.current.rotation.y -= rotationSpeed;
-      // Added x-y plane rotation
-      groupRef.current.rotation.z -= rotationSpeed * 0.5;
+    if (group.current) {
+      group.current.position.y = initialY + Math.sin(clock.getElapsedTime() * speed) * 0.1;
+      group.current.rotation.y += 0.005;
     }
   });
-
+  
   return (
-    <group ref={groupRef} position={position}>
-      <Text
-        position={[0, 0, 0] as [number, number, number]}
-        color={color}
-        fontSize={0.3} // Reduced text size from 0.5 to 0.3
-        // Remove the custom font and use the default font instead
-        anchorX="center"
-        anchorY="middle"
-        outlineWidth={0.03} // Reduced outline to match smaller text
-        outlineColor="#000000"
-        outlineOpacity={0.5} // Reduced opacity for lighter outline
-        fillOpacity={1}
-      >
-        {text}
-      </Text>
+    <group ref={group} position={position}>
+      {children}
     </group>
   );
 };
 
-// Central atom component with better aesthetics
-const AtomComponent = ({ position = [0, 0, 0] as [number, number, number], color = "#8A85FF" }) => {
-  const atomRef = useRef<THREE.Group>(null);
-  const ring1Ref = useRef<THREE.Mesh>(null);
-  const ring2Ref = useRef<THREE.Mesh>(null);
-  const ring3Ref = useRef<THREE.Mesh>(null);
-
-  // Different rotation speeds for visual interest
-  useFrame(() => {
-    if (atomRef.current) {
-      atomRef.current.rotation.y += 0.005;
-    }
-    if (ring1Ref.current) {
-      ring1Ref.current.rotation.x += 0.01;
-      ring1Ref.current.rotation.y += 0.005;
-    }
-    if (ring2Ref.current) {
-      ring2Ref.current.rotation.x += 0.007;
-      ring2Ref.current.rotation.z += 0.008;
-    }
-    if (ring3Ref.current) {
-      ring3Ref.current.rotation.z += 0.006;
-      ring3Ref.current.rotation.y -= 0.004;
-    }
-  });
-
-  return (
-    <group position={position} ref={atomRef}>
-      {/* Core sphere */}
-      <mesh>
-        <sphereGeometry args={[0.3, 32, 32]} />
-        <meshStandardMaterial 
-          color={color} 
-          emissive={color}
-          emissiveIntensity={0.5}
-          roughness={0.2}
-          metalness={0.8}
-        />
-      </mesh>
-
-      {/* Orbital rings */}
-      <mesh ref={ring1Ref}>
-        <torusGeometry args={[0.6, 0.04, 16, 64]} />
-        <meshStandardMaterial 
-          color={color} 
-          emissive={color}
-          emissiveIntensity={0.3}
-          transparent
-          opacity={0.8}
-        />
-      </mesh>
-
-      <mesh ref={ring2Ref} rotation={[Math.PI/2, 0, 0] as [number, number, number]}>
-        <torusGeometry args={[0.7, 0.04, 16, 64]} />
-        <meshStandardMaterial 
-          color="#E879F9" 
-          emissive="#E879F9"
-          emissiveIntensity={0.3}
-          transparent
-          opacity={0.8}
-        />
-      </mesh>
-
-      <mesh ref={ring3Ref} rotation={[0, Math.PI/3, Math.PI/4] as [number, number, number]}>
-        <torusGeometry args={[0.8, 0.04, 16, 64]} />
-        <meshStandardMaterial 
-          color="#633BBC" 
-          emissive="#633BBC"
-          emissiveIntensity={0.3}
-          transparent
-          opacity={0.8}
-        />
-      </mesh>
-
-      {/* Electron particles */}
-      <mesh position={[0.6 * Math.cos(0), 0.6 * Math.sin(0), 0] as [number, number, number]}>
-        <sphereGeometry args={[0.06, 16, 16]} />
-        <meshStandardMaterial color="#ffffff" emissive="#ffffff" />
-      </mesh>
-
-      <mesh position={[0, 0.7 * Math.cos(0), 0.7 * Math.sin(0)] as [number, number, number]}>
-        <sphereGeometry args={[0.06, 16, 16]} />
-        <meshStandardMaterial color="#ffffff" emissive="#ffffff" />
-      </mesh>
-
-      <mesh position={[0.8 * Math.sin(0), 0, 0.8 * Math.cos(0)] as [number, number, number]}>
-        <sphereGeometry args={[0.06, 16, 16]} />
-        <meshStandardMaterial color="#ffffff" emissive="#ffffff" />
-      </mesh>
-    </group>
-  );
-};
-
-// Rotating text orbits
-const OrbitingTechLabels = () => {
+const Shapes = () => {
   const { theme } = useTheme();
   
-  // Theme-aware colors with increased visibility
-  const primaryColor = "#9b87f5"; // Brighter purple
-  const secondaryColor = "#E879F9"; // Pink
-  const tertiaryColor = "#ffffff"; // White for maximum contrast
+  // Theme-aware colors
+  const primaryColor = "#8A85FF";
+  const secondaryColor = "#633BBC";
+  const accentColor = "#E879F9";
   
   return (
-    <group>
-      {/* Place tech labels in a circular pattern around the center */}
-      <TechLabel 
-        position={[2, 0, 0] as [number, number, number]} 
-        text="JavaScript" 
-        color={primaryColor} 
-        rotationSpeed={0.008} 
-      />
+    <>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[10, 10, 10]} intensity={1} />
       
-      <TechLabel 
-        position={[1.4, 1.4, 0] as [number, number, number]} 
-        text="TypeScript" 
-        color={secondaryColor} 
-        rotationSpeed={0.01} 
-      />
+      <FloatingIcon position={[1.5, 0, 0]} speed={0.8}>
+        <TechLabel position={[0, 0, 0.1]} text="JS" color={primaryColor} />
+      </FloatingIcon>
       
-      <TechLabel 
-        position={[0, 2, 0] as [number, number, number]} 
-        text="React" 
-        color={primaryColor} 
-        rotationSpeed={0.012} 
-      />
+      <FloatingIcon position={[-1, 0.8, -1]} speed={1.2}>
+        <TechLabel position={[0, 0, 0.1]} text="TS" color={secondaryColor} />
+      </FloatingIcon>
       
-      <TechLabel 
-        position={[-1.4, 1.4, 0] as [number, number, number]} 
-        text="Node.js" 
-        color={secondaryColor} 
-        rotationSpeed={0.009} 
-      />
+      <FloatingIcon position={[0, -0.7, 0.5]} speed={1}>
+        <TechLabel position={[0, 0, 0.1]} text="AWS" color={accentColor} />
+      </FloatingIcon>
       
-      <TechLabel 
-        position={[-2, 0, 0] as [number, number, number]} 
-        text="AWS" 
-        color={tertiaryColor} 
-        rotationSpeed={0.011} 
-      />
-      
-      <TechLabel 
-        position={[-1.4, -1.4, 0] as [number, number, number]} 
-        text="MongoDB" 
-        color={primaryColor} 
-        rotationSpeed={0.007} 
-      />
-      
-      <TechLabel 
-        position={[0, -2, 0] as [number, number, number]} 
-        text="Git" 
-        color={secondaryColor} 
-        rotationSpeed={0.013} 
-      />
-      
-      <TechLabel 
-        position={[1.4, -1.4, 0] as [number, number, number]} 
-        text="Redux" 
-        color={tertiaryColor} 
-        rotationSpeed={0.01} 
-      />
-      
-      {/* Central atom */}
-      <AtomComponent position={[0, 0, 0] as [number, number, number]} />
-    </group>
+      <FloatingIcon position={[1, 0.5, -0.5]} speed={0.9}>
+        <TechLabel position={[0, 0, 0.1]} text="GITHUB" color={primaryColor} />
+      </FloatingIcon>
+
+      {/* Atom icon (React) in the center-ish */}
+      <mesh position={[0.5, 1, -1]} rotation={[0, 0, 0]}>
+        <sphereGeometry args={[0.2, 16, 16]} />
+        <meshStandardMaterial color={primaryColor} />
+        <mesh position={[0, 0, 0]} rotation={[0, 0, 0]}>
+          <torusGeometry args={[0.3, 0.03, 16, 32]} />
+          <meshStandardMaterial color={primaryColor} />
+        </mesh>
+        <mesh position={[0, 0, 0]} rotation={[Math.PI/2, Math.PI/4, 0]}>
+          <torusGeometry args={[0.3, 0.03, 16, 32]} />
+          <meshStandardMaterial color={primaryColor} />
+        </mesh>
+      </mesh>
+    </>
   );
 };
 
 const HeroAnimation = () => {
-  const { theme } = useTheme();
-  
   return (
     <div className="h-full w-full">
-      <Canvas camera={{ position: [0, 0, 8] as [number, number, number], fov: 50 }}>
-        {/* Transparent background instead of black */}
-        <color attach="background" args={[theme === "dark" ? "transparent" : "transparent"]} />
-        
-        {/* Lighting to enhance visibility */}
-        <ambientLight intensity={0.7} />
-        <pointLight position={[10, 10, 10] as [number, number, number]} intensity={1} />
-        <pointLight position={[-10, -10, -10] as [number, number, number]} intensity={0.5} />
-        
-        <OrbitingTechLabels />
+      <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
+        <Shapes />
       </Canvas>
     </div>
   );
