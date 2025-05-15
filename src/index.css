@@ -1,7 +1,19 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Canvas container */
+.canvas-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.canvas-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  outline: none;
+}
 
 @layer base {
   :root {
@@ -17,7 +29,7 @@
     --primary: 210 79.2% 33.7%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 187 72% 59%;
+    --secondary: 187 82% 55%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 93%;
@@ -33,23 +45,23 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 222.2 84% 6.9%;
     --card-foreground: 210 40% 98%;
 
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 79.2% 43.7%;
+    --primary: 210 79.2% 50%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 187 72% 49%;
+    --secondary: 187 82% 60%;
     --secondary-foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
@@ -71,7 +83,7 @@
   * {
     @apply border-border;
   }
-  
+
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
@@ -85,12 +97,17 @@
     @apply py-16 md:py-24;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-bold tracking-tight;
   }
 
   h1 {
-    @apply text-hero mb-4;
+    @apply text-5xl md:text-6xl lg:text-7xl mb-4;
   }
 
   h2 {
@@ -116,39 +133,86 @@
   }
 
   .section-title::after {
-    content: '';
-    @apply block h-1 w-16 bg-primary mx-auto mt-4;
+    content: "";
+    @apply block h-1 w-24 bg-gradient-to-r from-primary to-secondary mx-auto mt-4 rounded-full;
   }
 
   .skill-card {
-    @apply bg-card p-4 rounded-lg shadow-skill transition-all duration-300
-           hover:shadow-lg hover:-translate-y-1 hover:bg-accent/50;
+    @apply bg-card/80 backdrop-blur-sm p-6 rounded-xl shadow-sm border border-border/30 transition-all duration-300
+           hover:shadow-md hover:border-primary/20 hover:-translate-y-1 hover:bg-card;
   }
 
   .project-card {
-    @apply bg-card rounded-lg overflow-hidden shadow-md transition-all duration-300
-           hover:shadow-xl hover:-translate-y-1;
+    @apply bg-card/80 backdrop-blur-sm rounded-xl overflow-hidden shadow-sm border border-border/30 transition-all duration-300
+           hover:shadow-md hover:border-primary/20 hover:-translate-y-1 hover:bg-card;
   }
 
   .nav-link {
-    @apply px-3 py-2 text-sm md:text-base rounded-md font-medium transition-colors
-           hover:bg-accent hover:text-accent-foreground;
+    @apply px-3 py-2 text-sm md:text-base rounded-md font-medium transition-all duration-300
+           hover:bg-accent hover:text-accent-foreground relative;
   }
 
   .nav-link.active {
-    @apply bg-primary text-primary-foreground;
+    @apply text-primary;
+  }
+
+  .nav-link.active::after {
+    content: "";
+    @apply absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/2 h-0.5 bg-primary rounded-full;
+  }
+
+  /* Glass effect for cards and panels */
+  .glass {
+    @apply bg-background/70 backdrop-blur-md border border-border/30 shadow-sm;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary;
+  }
+
+  /* Gradient border */
+  .gradient-border {
+    position: relative;
+  }
+
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(
+      to right,
+      hsl(var(--primary)),
+      hsl(var(--secondary))
+    );
+    border-radius: calc(var(--radius) + 1px);
+    z-index: -1;
+    opacity: 0.5;
   }
 }
 
-/* Canvas container */
-.canvas-container {
-  @apply absolute inset-0 z-0 opacity-80 pointer-events-none;
+/* Hero text size responsive class */
+.text-hero {
+  @apply text-5xl md:text-6xl lg:text-7xl;
 }
 
-@media (max-width: 768px) {
-  .canvas-container {
-    @apply opacity-50;
-  }
+/* Smooth transitions */
+a,
+button {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* Refined scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/50 rounded-full hover:bg-primary;
 }
 
 /* Animations delay utilities */
@@ -170,4 +234,30 @@
 
 .delay-500 {
   animation-delay: 500ms;
+}
+
+/* Custom animation for page transitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Improve contact section */
+.contact-form-wrapper {
+  @apply bg-card/80 backdrop-blur-sm rounded-xl p-6 border border-border/30;
+}
+
+/* Better focus styles */
+:focus-visible {
+  @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background transition-all;
 }
