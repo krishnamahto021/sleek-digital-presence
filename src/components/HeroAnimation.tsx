@@ -4,7 +4,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { useTheme } from "../contexts/ThemeContext";
 import * as THREE from "three";
 import { Text } from "@react-three/drei";
-import { Github, Js, Ts, Html, Css, React as ReactIcon } from "lucide-react";
+import { Code, CodeXml, Terminal, FileJson, Github } from "lucide-react";
 
 // Helper component for tech icons
 const TechIcon = ({ position, icon, size = 1, rotationSpeed = 0.01 }) => {
