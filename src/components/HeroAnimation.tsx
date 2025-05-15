@@ -103,7 +103,7 @@ const Database = ({ position, color, size = 1, rotationSpeed = 0.01 }: { positio
   );
 };
 
-// All the shapes collection
+// All the shapes collection - limited to 5 coding-related shapes
 const Shapes = () => {
   const { theme } = useTheme();
   
@@ -119,18 +119,12 @@ const Shapes = () => {
       <ambientLight intensity={0.5} />
       <directionalLight position={[10, 10, 10]} intensity={1} />
       
-      {/* Original shapes */}
-      <Shape position={[1.5, 0, 0]} color={primaryColor} size={0.7} rotationSpeed={0.01} geometry="box" />
-      <Shape position={[-1, 0.8, -1]} color={secondaryColor} size={0.6} rotationSpeed={0.015} geometry="sphere" />
-      <Shape position={[0, -1.2, 0.5]} color={accentColor} size={0.5} rotationSpeed={0.02} geometry="torus" />
-      
-      {/* New coding-related shapes */}
-      <CodeBracket position={[2, -0.8, 0.2]} color={quaternaryColor} size={0.8} rotationSpeed={0.015} />
-      <Database position={[-1.8, 0.2, -0.5]} color={primaryColor} size={0.8} rotationSpeed={0.01} />
-      <Shape position={[0.5, 1.2, -0.3]} color={tertiaryColor} size={0.6} rotationSpeed={0.025} geometry="dodecahedron" />
-      <Shape position={[-1.5, -0.7, 0.2]} color={secondaryColor} size={0.5} rotationSpeed={0.018} geometry="octahedron" />
-      <Shape position={[1.2, 1.5, 0.3]} color={accentColor} size={0.4} rotationSpeed={0.022} geometry="tetrahedron" />
-      <Shape position={[-0.6, -1.6, -0.4]} color={quaternaryColor} size={0.5} rotationSpeed={0.017} geometry="cone" />
+      {/* Limited to 5 coding-related shapes */}
+      <CodeBracket position={[1.5, 0.5, 0]} color={quaternaryColor} size={0.8} rotationSpeed={0.015} />
+      <Database position={[-1.5, 0, 0.5]} color={primaryColor} size={0.8} rotationSpeed={0.01} />
+      <Shape position={[0, -1.2, 0.5]} color={accentColor} size={0.7} rotationSpeed={0.02} geometry="dodecahedron" />
+      <Shape position={[-0.8, 1.2, -0.3]} color={tertiaryColor} size={0.7} rotationSpeed={0.025} geometry="octahedron" />
+      <Shape position={[1.2, -0.8, -0.5]} color={secondaryColor} size={0.6} rotationSpeed={0.018} geometry="tetrahedron" />
     </>
   );
 };
