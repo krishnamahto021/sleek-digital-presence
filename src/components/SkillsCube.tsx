@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
@@ -30,13 +29,13 @@ const CubeFace = ({ position, rotation, name, color, isHovered }) => {
   const textProps = {
     fontSize: 0.45,
     color: theme === "dark" ? "#ffffff" : "#000000",
-    anchorX: "center" as "center", // Explicitly specify the type as a literal
-    anchorY: "middle" as "middle", // Explicitly specify the type as a literal
+    anchorX: "center",
+    anchorY: "middle",
     outlineWidth: isHovered ? 0.05 : 0.02,
     outlineColor: isHovered ? color : (theme === "dark" ? "#000000" : "#ffffff"),
     outlineOpacity: 1,
     maxWidth: 1.5,
-    textAlign: "center" as "center", // Explicitly specify the type as a literal
+    textAlign: "center",
     lineHeight: 1,
   };
 
@@ -87,7 +86,7 @@ const CubeFace = ({ position, rotation, name, color, isHovered }) => {
 
 // Simple persistent storage for cube rotation
 const useCubeRotation = () => {
-  const [rotation, setRotation] = useState<{ x: number; y: number; z: number }>({ x: 0, y: 0, z: 0 });
+  const [rotation, setRotation] = useState({ x: 0, y: 0, z: 0 });
   
   useEffect(() => {
     // Load saved rotation on mount
@@ -101,7 +100,7 @@ const useCubeRotation = () => {
     }
   }, []);
   
-  const saveRotation = (newRotation: { x: number; y: number; z: number }) => {
+  const saveRotation = (newRotation) => {
     setRotation(newRotation);
     try {
       localStorage.setItem('cubeRotation', JSON.stringify(newRotation));
@@ -110,12 +109,12 @@ const useCubeRotation = () => {
     }
   };
   
-  return [rotation, saveRotation] as const; // Using as const to preserve the tuple type
+  return [rotation, saveRotation];
 };
 
 // The main cube component
 const SkillsCubeModel = () => {
-  const cubeRef = useRef<THREE.Group>(null);
+  const cubeRef = useRef();
   const [hoveredFace, setHoveredFace] = useState(null);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
   const [initialRotation, saveRotation] = useCubeRotation();
@@ -162,11 +161,11 @@ const SkillsCubeModel = () => {
     setHoveredFace(null);
   };
   
-  const handleInteractionStart = () => {
+  const handlePresentationStart = () => {
     setIsUserInteracting(true);
   };
   
-  const handleInteractionEnd = () => {
+  const handlePresentationEnd = () => {
     setIsUserInteracting(false);
     if (cubeRef.current) {
       saveRotation({
@@ -242,6 +241,8 @@ const SkillsCube = () => {
           snap={{ mass: 4, tension: 300 }}
           cursor={true}
           speed={1.5}
+          onDragStart={handleInteractionStart}
+          onDragEnd={handleInteractionEnd}
         >
           <SkillsCubeModel />
         </PresentationControls>
