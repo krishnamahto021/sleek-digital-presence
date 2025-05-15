@@ -20,7 +20,7 @@ const TechLabel = ({ position, text, color, rotationSpeed = 0.01 }) => {
   return (
     <group ref={groupRef} position={position}>
       <Text
-        position={[0, 0, 0]}
+        position={[0, 0, 0] as [number, number, number]}
         color={color}
         fontSize={0.5}
         font="/fonts/Inter-Bold.woff"
@@ -38,7 +38,7 @@ const TechLabel = ({ position, text, color, rotationSpeed = 0.01 }) => {
 };
 
 // Central atom component with better aesthetics
-const AtomComponent = ({ position = [0, 0, 0], color = "#8A85FF" }) => {
+const AtomComponent = ({ position = [0, 0, 0] as [number, number, number], color = "#8A85FF" }) => {
   const atomRef = useRef<THREE.Group>(null);
   const ring1Ref = useRef<THREE.Mesh>(null);
   const ring2Ref = useRef<THREE.Mesh>(null);
@@ -89,7 +89,7 @@ const AtomComponent = ({ position = [0, 0, 0], color = "#8A85FF" }) => {
         />
       </mesh>
 
-      <mesh ref={ring2Ref} rotation={[Math.PI/2, 0, 0]}>
+      <mesh ref={ring2Ref} rotation={[Math.PI/2, 0, 0] as [number, number, number]}>
         <torusGeometry args={[0.7, 0.04, 16, 64]} />
         <meshStandardMaterial 
           color="#E879F9" 
@@ -100,7 +100,7 @@ const AtomComponent = ({ position = [0, 0, 0], color = "#8A85FF" }) => {
         />
       </mesh>
 
-      <mesh ref={ring3Ref} rotation={[0, Math.PI/3, Math.PI/4]}>
+      <mesh ref={ring3Ref} rotation={[0, Math.PI/3, Math.PI/4] as [number, number, number]}>
         <torusGeometry args={[0.8, 0.04, 16, 64]} />
         <meshStandardMaterial 
           color="#633BBC" 
@@ -112,17 +112,17 @@ const AtomComponent = ({ position = [0, 0, 0], color = "#8A85FF" }) => {
       </mesh>
 
       {/* Electron particles */}
-      <mesh position={[0.6 * Math.cos(0), 0.6 * Math.sin(0), 0]}>
+      <mesh position={[0.6 * Math.cos(0), 0.6 * Math.sin(0), 0] as [number, number, number]}>
         <sphereGeometry args={[0.06, 16, 16]} />
         <meshStandardMaterial color="#ffffff" emissive="#ffffff" />
       </mesh>
 
-      <mesh position={[0, 0.7 * Math.cos(0), 0.7 * Math.sin(0)]}>
+      <mesh position={[0, 0.7 * Math.cos(0), 0.7 * Math.sin(0)] as [number, number, number]}>
         <sphereGeometry args={[0.06, 16, 16]} />
         <meshStandardMaterial color="#ffffff" emissive="#ffffff" />
       </mesh>
 
-      <mesh position={[0.8 * Math.sin(0), 0, 0.8 * Math.cos(0)]}>
+      <mesh position={[0.8 * Math.sin(0), 0, 0.8 * Math.cos(0)] as [number, number, number]}>
         <sphereGeometry args={[0.06, 16, 16]} />
         <meshStandardMaterial color="#ffffff" emissive="#ffffff" />
       </mesh>
@@ -209,14 +209,14 @@ const HeroAnimation = () => {
   
   return (
     <div className="h-full w-full">
-      <Canvas camera={{ position: [0, 0, 8], fov: 50 }}>
+      <Canvas camera={{ position: [0, 0, 8] as [number, number, number], fov: 50 }}>
         {/* Subtle background color */}
-        <color attach="background" args={[theme === "dark" ? "#00000000" : "#00000000"]} />
+        <color attach="background" args={[theme === "dark" ? "#000000" : "#ffffff"]} />
         
         {/* Lighting to enhance visibility */}
         <ambientLight intensity={0.7} />
-        <pointLight position={[10, 10, 10]} intensity={1} />
-        <pointLight position={[-10, -10, -10]} intensity={0.5} />
+        <pointLight position={[10, 10, 10] as [number, number, number]} intensity={1} />
+        <pointLight position={[-10, -10, -10] as [number, number, number]} intensity={0.5} />
         
         <OrbitingTechLabels />
       </Canvas>
