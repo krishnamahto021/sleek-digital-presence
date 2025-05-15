@@ -5,7 +5,7 @@ import { useTheme } from "../contexts/ThemeContext";
 import * as THREE from "three";
 
 const Shape = ({ position, color, size = 1, rotationSpeed = 0.01 }) => {
-  const meshRef = useRef();
+  const meshRef = useRef<THREE.Mesh>(null);
   
   useFrame(() => {
     if (meshRef.current) {

@@ -11,8 +11,9 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  // Initialize the theme state
   const [theme, setTheme] = useState<Theme>(() => {
-    // Check local storage or system preference
+    // Check for client-side rendering
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme') as Theme;
       if (savedTheme) return savedTheme;
@@ -20,7 +21,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       return prefersDark ? 'dark' : 'light';
     }
-    return 'light';
+    return 'light'; // Default for server-side rendering
   });
 
   useEffect(() => {
