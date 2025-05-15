@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
@@ -36,7 +35,7 @@ const CubeFace = ({ position, rotation, name, color, isHovered }) => {
     outlineColor: isHovered ? color : (theme === "dark" ? "#000000" : "#ffffff"),
     outlineOpacity: 1,
     maxWidth: 1.5,
-    textAlign: "center" as "center", // Fixed: explicitly type as literal
+    textAlign: "center",
     lineHeight: 1,
   };
 
@@ -85,16 +84,9 @@ const CubeFace = ({ position, rotation, name, color, isHovered }) => {
   );
 };
 
-// Define the rotation type for clarity
-interface CubeRotation {
-  x: number;
-  y: number;
-  z: number;
-}
-
-// Simple persistent storage for cube rotation - fixed return type
-const useCubeRotation = (): [CubeRotation, (newRotation: CubeRotation) => void] => {
-  const [rotation, setRotation] = useState<CubeRotation>({ x: 0, y: 0, z: 0 });
+// Simple persistent storage for cube rotation
+const useCubeRotation = () => {
+  const [rotation, setRotation] = useState({ x: 0, y: 0, z: 0 });
   
   useEffect(() => {
     // Load saved rotation on mount
@@ -108,7 +100,7 @@ const useCubeRotation = (): [CubeRotation, (newRotation: CubeRotation) => void] 
     }
   }, []);
   
-  const saveRotation = (newRotation: CubeRotation) => {
+  const saveRotation = (newRotation) => {
     setRotation(newRotation);
     try {
       localStorage.setItem('cubeRotation', JSON.stringify(newRotation));
@@ -122,8 +114,8 @@ const useCubeRotation = (): [CubeRotation, (newRotation: CubeRotation) => void] 
 
 // The main cube component
 const SkillsCubeModel = () => {
-  const cubeRef = useRef<THREE.Group>();
-  const [hoveredFace, setHoveredFace] = useState<number | null>(null);
+  const cubeRef = useRef();
+  const [hoveredFace, setHoveredFace] = useState(null);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
   const [initialRotation, saveRotation] = useCubeRotation();
   const { theme } = useTheme();
@@ -220,12 +212,11 @@ const SkillsCube = () => {
   const { theme } = useTheme();
   const [isInteracting, setIsInteracting] = useState(false);
   
-  // Handle drag events with correct event types
-  const handleStart = () => {
+  const handleInteractionStart = () => {
     setIsInteracting(true);
   };
   
-  const handleEnd = () => {
+  const handleInteractionEnd = () => {
     setTimeout(() => setIsInteracting(false), 1000);
   };
   
@@ -250,6 +241,8 @@ const SkillsCube = () => {
           snap={{ mass: 4, tension: 300 }}
           cursor={true}
           speed={1.5}
+          onDragStart={handleInteractionStart}
+          onDragEnd={handleInteractionEnd}
         >
           <SkillsCubeModel />
         </PresentationControls>
