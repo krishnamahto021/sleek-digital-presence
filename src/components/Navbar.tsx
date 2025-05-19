@@ -1,11 +1,10 @@
-
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-scroll';
-import { motion } from 'framer-motion';
-import { Menu, X, Moon, Sun } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
-import { useData } from '../contexts/DataContext';
-import { Button } from '@/components/ui/button';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-scroll";
+import { motion } from "framer-motion";
+import { Menu, X, Moon, Sun } from "lucide-react";
+import { useTheme } from "../contexts/ThemeContext";
+import { useData } from "../contexts/DataContext";
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
@@ -19,18 +18,18 @@ const Navbar = () => {
       setIsScrolled(window.scrollY > 50);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   const navLinks = [
-    { title: 'About', to: 'about' },
-    { title: 'Projects', to: 'projects' },
-    { title: 'Skills', to: 'skills' },
-    { title: 'Resume', to: 'resume' },
-    { title: 'Contact', to: 'contact' },
+    { title: "About", to: "about" },
+    { title: "Projects", to: "projects" },
+    { title: "Skills", to: "skills" },
+    { title: "Resume", to: "resume" },
+    { title: "Contact", to: "contact" },
   ];
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -39,7 +38,9 @@ const Navbar = () => {
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-background/90 backdrop-blur shadow-md py-2' : 'bg-transparent py-4'
+        isScrolled
+          ? "bg-background/90 backdrop-blur shadow-md py-2"
+          : "bg-transparent py-4"
       }`}
     >
       <div className="container mx-auto flex justify-between items-center">
@@ -51,7 +52,7 @@ const Navbar = () => {
           className="text-xl font-bold cursor-pointer"
           offset={-100}
         >
-          {bio.name.split(' ')[0]}
+          {bio.name.split(" ")[0]}
           <span className="text-primary">.</span>
         </Link>
 
@@ -65,39 +66,43 @@ const Navbar = () => {
               smooth={true}
               offset={-70}
               duration={500}
-              className="nav-link"
+              className="nav-link cursor-pointer"
               activeClass="active"
             >
               {link.title}
             </Link>
           ))}
 
-          <Button 
+          <Button
             variant="ghost"
             size="icon"
             onClick={toggleTheme}
             className="ml-2"
-            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            aria-label={`Switch to ${
+              theme === "light" ? "dark" : "light"
+            } mode`}
           >
-            {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+            {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
           </Button>
         </nav>
 
         {/* Mobile Menu Button */}
         <div className="flex md:hidden items-center">
-          <Button 
+          <Button
             variant="ghost"
             size="icon"
             onClick={toggleTheme}
-            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            aria-label={`Switch to ${
+              theme === "light" ? "dark" : "light"
+            } mode`}
             className="mr-2"
           >
-            {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+            {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
           </Button>
-          
-          <Button 
-            variant="ghost" 
-            size="icon" 
+
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={toggleMenu}
             aria-label="Toggle menu"
           >

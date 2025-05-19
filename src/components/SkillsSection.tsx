@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useData } from "../contexts/DataContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,6 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import SkillsCube from "./SkillsCube";
+import Enhanced3DEffects from "./Enhanced3DEffects";
 
 const SkillsSection = () => {
   const { skills } = useData();
@@ -23,11 +24,20 @@ const SkillsSection = () => {
   // Group skills by category for counting
   const frontendCount = skills.filter((s) => s.category === "frontend").length;
   const backendCount = skills.filter((s) => s.category === "backend").length;
-  const toolsCount = skills.filter((s) => s.category === "tools").length;
 
   return (
-    <section id="skills" className="bg-muted/40">
-      <div className="container mx-auto">
+    <section id="skills" className="bg-muted/40 relative overflow-hidden">
+      {/* Full-screen background with particle effects */}
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <Enhanced3DEffects
+          height="100%"
+          interactive={false}
+          showParticles={true}
+          showPanels={false}
+        />
+      </div>
+
+      <div className="container mx-auto relative z-10">
         <h2 className="section-title">My Skills</h2>
 
         <div className="max-w-5xl mx-auto mb-16">
@@ -66,41 +76,96 @@ const SkillsSection = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="all" className="w-full max-w-3xl mx-auto">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="all" onClick={() => setCategory("all")}>
-              All ({skills.length})
-            </TabsTrigger>
-            <TabsTrigger
-              value="frontend"
-              onClick={() => setCategory("frontend")}
+        <div className="relative max-w-7xl mx-auto pb-12">
+          {/* For larger screens: 3 column layout with 3D effects on sides */}
+
+          {/* Tabs in the middle */}
+          <div className="px-4">
+            <Tabs defaultValue="all" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 mb-6">
+                <TabsTrigger value="all" onClick={() => setCategory("all")}>
+                  All ({skills.length})
+                </TabsTrigger>
+                <TabsTrigger
+                  value="frontend"
+                  onClick={() => setCategory("frontend")}
+                >
+                  Frontend ({frontendCount})
+                </TabsTrigger>
+                <TabsTrigger
+                  value="backend"
+                  onClick={() => setCategory("backend")}
+                >
+                  Backend ({backendCount})
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="all" className="mt-6">
+                <SkillsGrid skills={filteredSkills} />
+              </TabsContent>
+
+              <TabsContent value="frontend" className="mt-6">
+                <SkillsGrid skills={filteredSkills} />
+              </TabsContent>
+
+              <TabsContent value="backend" className="mt-6">
+                <SkillsGrid skills={filteredSkills} />
+              </TabsContent>
+            </Tabs>
+          </div>
+        </div>
+
+        {/* For mobile: Just tabs and content */}
+        <div className="md:hidden px-4">
+          <Tabs defaultValue="all" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="all" onClick={() => setCategory("all")}>
+                All ({skills.length})
+              </TabsTrigger>
+              <TabsTrigger
+                value="frontend"
+                onClick={() => setCategory("frontend")}
+              >
+                Frontend ({frontendCount})
+              </TabsTrigger>
+              <TabsTrigger
+                value="backend"
+                onClick={() => setCategory("backend")}
+              >
+                Backend ({backendCount})
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="all" className="mt-6">
+              <SkillsGrid skills={filteredSkills} />
+            </TabsContent>
+
+            <TabsContent value="frontend" className="mt-6">
+              <SkillsGrid skills={filteredSkills} />
+            </TabsContent>
+
+            <TabsContent value="backend" className="mt-6">
+              <SkillsGrid skills={filteredSkills} />
+            </TabsContent>
+          </Tabs>
+
+          {/* Small 3D effect for mobile */}
+          <div className="mt-8 h-[200px]">
+            <motion.div
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
+              className="h-full w-full rounded-lg overflow-hidden border border-primary/10 shadow-md"
             >
-              Frontend ({frontendCount})
-            </TabsTrigger>
-            <TabsTrigger value="backend" onClick={() => setCategory("backend")}>
-              Backend ({backendCount})
-            </TabsTrigger>
-            <TabsTrigger value="tools" onClick={() => setCategory("tools")}>
-              Tools ({toolsCount})
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="all" className="mt-6">
-            <SkillsGrid skills={filteredSkills} />
-          </TabsContent>
-
-          <TabsContent value="frontend" className="mt-6">
-            <SkillsGrid skills={filteredSkills} />
-          </TabsContent>
-
-          <TabsContent value="backend" className="mt-6">
-            <SkillsGrid skills={filteredSkills} />
-          </TabsContent>
-
-          <TabsContent value="tools" className="mt-6">
-            <SkillsGrid skills={filteredSkills} />
-          </TabsContent>
-        </Tabs>
+              <Enhanced3DEffects
+                height="100%"
+                interactive={true}
+                showParticles={true}
+                showPanels={true}
+                className="dark:bg-slate-900/80 bg-slate-100/80"
+              />
+            </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -117,7 +182,7 @@ interface SkillsGridProps {
 
 const SkillsGrid: React.FC<SkillsGridProps> = ({ skills }) => {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4">
       {skills.map((skill, index) => (
         <TooltipProvider key={skill.name}>
           <Tooltip>
@@ -127,12 +192,12 @@ const SkillsGrid: React.FC<SkillsGridProps> = ({ skills }) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
                 viewport={{ once: true }}
-                className="skill-card"
+                className="skill-card bg-card/30 dark:bg-card/20 backdrop-blur-sm p-4 rounded-lg border border-primary/10 hover:border-primary/30 transition-all hover:shadow-md"
               >
                 <div className="text-center">
-                  <div className="mb-2 relative">
+                  <div className="mb-3 relative">
                     <div
-                      className="w-full bg-muted h-2 rounded-full overflow-hidden"
+                      className="w-full bg-muted dark:bg-muted/50 h-2 rounded-full overflow-hidden"
                       aria-hidden="true"
                     >
                       <div
@@ -140,12 +205,12 @@ const SkillsGrid: React.FC<SkillsGridProps> = ({ skills }) => {
                         style={{ width: `${skill.level}%` }}
                       />
                     </div>
-                    <span className="text-xs text-muted-foreground mt-1 block">
+                    <span className="text-xs text-muted-foreground mt-2 block">
                       {skill.level}%
                     </span>
                   </div>
-                  <h4 className="font-medium">{skill.name}</h4>
-                  <p className="text-xs text-muted-foreground capitalize">
+                  <h4 className="font-medium text-lg">{skill.name}</h4>
+                  <p className="text-xs text-muted-foreground capitalize mt-1">
                     {skill.category}
                   </p>
                 </div>
