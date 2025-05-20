@@ -9,11 +9,15 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import SkillsCube from "./SkillsCube";
-import ParticlesBackground from "./ParticlesBackground";
+import { ShootingStars } from "./ui/shooting-stars";
+import SkillsGrid from "./SkillsGrid";
+import { useTheme } from "next-themes";
 
 const SkillsSection = () => {
   const { skills } = useData();
   const [category, setCategory] = useState("all");
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   // Filter skills based on selected category
   const filteredSkills =
@@ -25,10 +29,80 @@ const SkillsSection = () => {
   const frontendCount = skills.filter((s) => s.category === "frontend").length;
   const backendCount = skills.filter((s) => s.category === "backend").length;
 
+  // Define star background styles based on theme
+  const starsStyle = {
+    backgroundImage: isDark
+      ? `radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+         radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+         radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+         radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+         radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
+         radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0))`
+      : `radial-gradient(2px 2px at 20px 30px, #333, rgba(0,0,0,0)),
+         radial-gradient(2px 2px at 40px 70px, #444, rgba(0,0,0,0)),
+         radial-gradient(2px 2px at 50px 160px, #222, rgba(0,0,0,0)),
+         radial-gradient(2px 2px at 90px 40px, #333, rgba(0,0,0,0)),
+         radial-gradient(2px 2px at 130px 80px, #222, rgba(0,0,0,0)),
+         radial-gradient(2px 2px at 160px 120px, #111, rgba(0,0,0,0))`,
+    backgroundRepeat: "repeat",
+    backgroundSize: "200px 200px",
+    animation: "twinkle 5s ease-in-out infinite",
+    opacity: isDark ? 0.3 : 0.15,
+  };
+
+  // Create CSS for the twinkle animation
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.innerHTML = `
+      @keyframes twinkle {
+        0% { opacity: ${isDark ? 0.3 : 0.15}; }
+        50% { opacity: ${isDark ? 0.5 : 0.3}; }
+        100% { opacity: ${isDark ? 0.3 : 0.15}; }
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, [isDark]);
+
   return (
-    <section id="skills" className="bg-muted/40 relative overflow-hidden">
-      {/* Full-screen background with particle effects */}
-      <ParticlesBackground />
+    <section
+      id="skills"
+      className="bg-background/90 dark:bg-muted/20 relative overflow-hidden"
+    >
+      {/* Background with stars */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.15)_0%,rgba(0,0,0,0)_80%)]" />
+        <div className="stars absolute inset-0" style={starsStyle} />
+      </div>
+
+      {/* Multiple shooting star layers with different colors and speeds */}
+      <ShootingStars
+        starColor={isDark ? "#9E00FF" : "#6000A0"}
+        trailColor={isDark ? "#2EB9DF" : "#0080A0"}
+        minSpeed={15}
+        maxSpeed={35}
+        minDelay={1000}
+        maxDelay={3000}
+      />
+      <ShootingStars
+        starColor={isDark ? "#FF0099" : "#C00060"}
+        trailColor={isDark ? "#FFB800" : "#DB8300"}
+        minSpeed={10}
+        maxSpeed={25}
+        minDelay={2000}
+        maxDelay={4000}
+      />
+      <ShootingStars
+        starColor={isDark ? "#00FF9E" : "#00B070"}
+        trailColor={isDark ? "#00B8FF" : "#0070B0"}
+        minSpeed={20}
+        maxSpeed={40}
+        minDelay={1500}
+        maxDelay={3500}
+      />
 
       <div className="container mx-auto relative z-10">
         <h2 className="section-title">My Skills</h2>
@@ -144,61 +218,6 @@ const SkillsSection = () => {
         </div>
       </div>
     </section>
-  );
-};
-
-interface SkillsGridProps {
-  skills: {
-    name: string;
-    level: number;
-    category: string;
-    description: string;
-  }[];
-}
-
-const SkillsGrid: React.FC<SkillsGridProps> = ({ skills }) => {
-  return (
-    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4">
-      {skills.map((skill, index) => (
-        <TooltipProvider key={skill.name}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                viewport={{ once: true }}
-                className="skill-card bg-card/30 dark:bg-card/20 backdrop-blur-sm p-4 rounded-lg border border-primary/10 hover:border-primary/30 transition-all hover:shadow-md"
-              >
-                <div className="text-center">
-                  <div className="mb-3 relative">
-                    <div
-                      className="w-full bg-muted dark:bg-muted/50 h-2 rounded-full overflow-hidden"
-                      aria-hidden="true"
-                    >
-                      <div
-                        className="bg-gradient-to-r from-primary to-secondary h-full rounded-full"
-                        style={{ width: `${skill.level}%` }}
-                      />
-                    </div>
-                    <span className="text-xs text-muted-foreground mt-2 block">
-                      {skill.level}%
-                    </span>
-                  </div>
-                  <h4 className="font-medium text-lg">{skill.name}</h4>
-                  <p className="text-xs text-muted-foreground capitalize mt-1">
-                    {skill.category}
-                  </p>
-                </div>
-              </motion.div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{skill.description}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      ))}
-    </div>
   );
 };
 
