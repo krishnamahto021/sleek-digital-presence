@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useData } from "../contexts/DataContext";
 import { MapPin, Mail, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { FlickeringGrid } from "@/components/ui/flickering-grid";
 
 const AboutSection = () => {
   const { bio, skills } = useData();
@@ -14,8 +15,19 @@ const AboutSection = () => {
     .map((skill) => skill.name);
 
   return (
-    <section id="about" className="bg-muted/50">
-      <div className="container mx-auto">
+    <section id="about" className="bg-muted/50 relative">
+      {/* Flickering Grid Background with GitHub theme */}
+      <div className="absolute inset-0 z-0 opacity-50">
+        <FlickeringGrid 
+          useGithubTheme={true}
+          maxOpacity={0.3}
+          flickerChance={0.05}
+          squareSize={4}
+          gridGap={6}
+        />
+      </div>
+      
+      <div className="container mx-auto relative z-10 py-16">
         <h2 className="section-title">About Me</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 items-center">

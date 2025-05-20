@@ -13,7 +13,7 @@ const Shape = ({ position, color, size = 1, rotationSpeed = 0.01 }) => {
   // Animation speed increases when hovered
   const speed = hovered ? rotationSpeed * 2 : rotationSpeed;
 
-  useFrame(() => {
+  useFrame((state) => {
     if (meshRef.current) {
       meshRef.current.rotation.x += speed;
       meshRef.current.rotation.y += speed * 1.3;
@@ -21,17 +21,22 @@ const Shape = ({ position, color, size = 1, rotationSpeed = 0.01 }) => {
       // Gentle floating animation
       meshRef.current.position.y =
         position[1] + Math.sin(Date.now() * 0.001) * 0.1;
+
+      // Subtle scale pulsing
+      const pulseFactor = 0.05 * Math.sin(state.clock.elapsedTime * 2);
+      const pulseScale = clicked
+        ? 0.9
+        : hovered
+        ? 1.2 + pulseFactor
+        : 1 + pulseFactor * 0.5;
+      meshRef.current.scale.set(pulseScale, pulseScale, pulseScale);
     }
   });
-
-  // Scale up when hovered or clicked
-  const scale = hovered ? 1.2 : clicked ? 0.9 : 1;
 
   return (
     <mesh
       ref={meshRef}
       position={position}
-      scale={[scale, scale, scale]}
       onClick={() => setClicked(!clicked)}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
@@ -47,8 +52,8 @@ const Shape = ({ position, color, size = 1, rotationSpeed = 0.01 }) => {
       <meshStandardMaterial
         color={hovered ? "#fff" : color}
         emissive={color}
-        emissiveIntensity={hovered ? 0.5 : 0.2}
-        metalness={0.5}
+        emissiveIntensity={hovered ? 0.7 : 0.3}
+        metalness={0.7}
         roughness={0.2}
       />
     </mesh>
@@ -58,21 +63,33 @@ const Shape = ({ position, color, size = 1, rotationSpeed = 0.01 }) => {
 // Small particles that float around
 const Particles = ({ count = 50, color }) => {
   const points = useRef<THREE.Points>(null);
+  const particlesMaterial = useRef<THREE.PointsMaterial>(null);
 
-  useFrame(() => {
+  useFrame((state) => {
     if (points.current) {
       points.current.rotation.x += 0.0003;
       points.current.rotation.y += 0.0005;
+
+      // Pulse opacity for subtle twinkling effect
+      if (particlesMaterial.current) {
+        particlesMaterial.current.opacity =
+          0.5 + Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
+      }
     }
   });
 
   // Create random positions for particles
   const positions = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+
   for (let i = 0; i < count; i++) {
     const i3 = i * 3;
     positions[i3] = (Math.random() - 0.5) * 10;
     positions[i3 + 1] = (Math.random() - 0.5) * 10;
     positions[i3 + 2] = (Math.random() - 0.5) * 10;
+
+    // Random sizes for more natural look
+    sizes[i] = Math.random() * 0.1;
   }
 
   return (
@@ -84,15 +101,27 @@ const Particles = ({ count = 50, color }) => {
           array={positions}
           itemSize={3}
         />
+        <bufferAttribute
+          attach="attributes-size"
+          count={count}
+          array={sizes}
+          itemSize={1}
+        />
       </bufferGeometry>
-      <pointsMaterial size={0.05} color={color} transparent opacity={0.5} />
+      <pointsMaterial
+        ref={particlesMaterial}
+        sizeAttenuation
+        color={color}
+        transparent
+        opacity={0.5}
+      />
     </points>
   );
 };
 
-// Magnetic cursor effect - follows mouse
+// Interactive light that follows mouse
 const MouseFollower = () => {
-  const { camera, mouse, viewport } = useThree();
+  const { mouse, viewport } = useThree();
   const light = useRef<THREE.PointLight>(null);
 
   useFrame(() => {
@@ -104,6 +133,9 @@ const MouseFollower = () => {
       // Smoothly move light towards mouse position
       light.current.position.x += (x - light.current.position.x) * 0.1;
       light.current.position.y += (y - light.current.position.y) * 0.1;
+
+      // Subtle intensity variation
+      light.current.intensity = 1.2 + Math.sin(Date.now() * 0.001) * 0.3;
     }
   });
 
@@ -111,9 +143,39 @@ const MouseFollower = () => {
     <pointLight
       ref={light}
       position={[0, 0, 3]}
-      intensity={1}
+      intensity={1.2}
       color="#ffffff"
+      distance={6}
     />
+  );
+};
+
+// Glowing ring background effect
+const GlowingRing = ({ color }) => {
+  const ring = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    if (ring.current) {
+      // Rotate slowly
+      ring.current.rotation.z += 0.001;
+
+      // Breathe in and out
+      const scale = 1.5 + Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
+      ring.current.scale.set(scale, scale, scale);
+    }
+  });
+
+  return (
+    <mesh ref={ring} rotation={[Math.PI / 2, 0, 0]} position={[0, 0, -2]}>
+      <torusGeometry args={[2, 0.2, 16, 60]} />
+      <meshStandardMaterial
+        color={color}
+        emissive={color}
+        emissiveIntensity={0.5}
+        transparent
+        opacity={0.15}
+      />
+    </mesh>
   );
 };
 
@@ -128,9 +190,10 @@ const Shapes = () => {
 
   return (
     <>
-      <ambientLight intensity={0.5} />
+      <ambientLight intensity={0.6} />
       <directionalLight position={[10, 10, 10]} intensity={0.8} />
       <MouseFollower />
+      <GlowingRing color={primaryColor} />
 
       <Shape
         position={[1.5, 0, 0]}
@@ -150,8 +213,14 @@ const Shapes = () => {
         size={0.5}
         rotationSpeed={0.02}
       />
+      <Shape
+        position={[-1.5, -0.5, -0.2]}
+        color={theme === "dark" ? "#64D9FE" : "#38BDF8"}
+        size={0.4}
+        rotationSpeed={0.025}
+      />
 
-      <Particles count={100} color={particleColor} />
+      <Particles count={150} color={particleColor} />
     </>
   );
 };
@@ -166,10 +235,10 @@ const HeroAnimation = () => {
 
   return (
     <motion.div
-      className="h-[300px] w-full md:h-[400px] relative"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
+      className="h-[300px] w-full md:h-[400px] relative cursor-move rounded-full overflow-hidden"
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
     >
       {mounted && (
         <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>

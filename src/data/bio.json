@@ -1,8 +1,8 @@
 {
   "name": "Alex Morgan",
-  "title": "Full Stack Developer",
-  "description": "I'm a passionate Full Stack Developer with expertise in modern web technologies. I love creating elegant solutions to complex problems and building applications that deliver exceptional user experiences. With a background in both frontend and backend development, I bring a holistic approach to every project.",
-  "photo": "https://images.unsplash.com/photo-1726842172813-55c6e284f8b5",
+  "title": "MVP Developer",
+  "description": "Specializing in rapid MVP development and product validation. I turn ideas into functional products with a focus on speed, quality, and user experience. Let's bring your concept to life.",
+  "photo": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
   "location": "San Francisco, CA",
   "email": "contact@alexmorgan.dev",
   "resume": "/resume.pdf",

@@ -5,13 +5,13 @@ import { useTheme } from "../contexts/ThemeContext";
 const WaveBackground = () => {
   const { theme } = useTheme();
 
-  // Theme-aware colors
+  // Theme-aware colors with increased opacity for better visibility
   const primaryColor =
-    theme === "dark" ? "rgba(121, 131, 229, 0.1)" : "rgba(73, 89, 231, 0.08)";
+    theme === "dark" ? "rgba(121, 131, 229, 0.25)" : "rgba(73, 89, 231, 0.20)";
   const secondaryColor =
-    theme === "dark" ? "rgba(82, 172, 255, 0.1)" : "rgba(47, 133, 224, 0.08)";
+    theme === "dark" ? "rgba(82, 172, 255, 0.25)" : "rgba(47, 133, 224, 0.20)";
   const accentColor =
-    theme === "dark" ? "rgba(232, 121, 249, 0.07)" : "rgba(217, 70, 239, 0.05)";
+    theme === "dark" ? "rgba(232, 121, 249, 0.18)" : "rgba(217, 70, 239, 0.15)";
 
   return (
     <div className="absolute inset-0 overflow-hidden z-0">
@@ -42,7 +42,7 @@ const WaveBackground = () => {
             transition={{
               repeat: Infinity,
               repeatType: "mirror",
-              duration: 30,
+              duration: 24,
               ease: "easeInOut",
             }}
           />
@@ -76,7 +76,7 @@ const WaveBackground = () => {
             transition={{
               repeat: Infinity,
               repeatType: "mirror",
-              duration: 20,
+              duration: 18,
               ease: "easeInOut",
             }}
           />
@@ -110,7 +110,41 @@ const WaveBackground = () => {
             transition={{
               repeat: Infinity,
               repeatType: "mirror",
-              duration: 15,
+              duration: 12,
+              ease: "easeInOut",
+            }}
+          />
+        </svg>
+      </motion.div>
+      
+      {/* Fourth wave layer - fastest, subtlest movement */}
+      <motion.div
+        className="absolute inset-0 z-0"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.7 }}
+        transition={{ duration: 1, delay: 0.6 }}
+      >
+        <svg
+          className="w-full h-full absolute top-0 left-0"
+          viewBox="0 0 1440 700"
+          preserveAspectRatio="none"
+        >
+          <motion.path
+            d="M0,160L40,165.3C80,171,160,181,240,197.3C320,213,400,235,480,224C560,213,640,171,720,165.3C800,160,880,192,960,197.3C1040,203,1120,181,1200,176C1280,171,1360,181,1400,186.7L1440,192L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z"
+            fill="rgba(255, 255, 255, 0.05)"
+            initial={{ y: 250 }}
+            animate={{
+              y: [250, 200, 250],
+              d: [
+                "M0,160L40,165.3C80,171,160,181,240,197.3C320,213,400,235,480,224C560,213,640,171,720,165.3C800,160,880,192,960,197.3C1040,203,1120,181,1200,176C1280,171,1360,181,1400,186.7L1440,192L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z",
+                "M0,128L40,133.3C80,139,160,149,240,170.7C320,192,400,224,480,218.7C560,213,640,171,720,144C800,117,880,107,960,122.7C1040,139,1120,181,1200,186.7C1280,192,1360,160,1400,144L1440,128L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z",
+                "M0,160L40,165.3C80,171,160,181,240,197.3C320,213,400,235,480,224C560,213,640,171,720,165.3C800,160,880,192,960,197.3C1040,203,1120,181,1200,176C1280,171,1360,181,1400,186.7L1440,192L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z",
+              ],
+            }}
+            transition={{
+              repeat: Infinity,
+              repeatType: "mirror",
+              duration: 10,
               ease: "easeInOut",
             }}
           />
