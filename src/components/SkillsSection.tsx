@@ -9,7 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import SkillsCube from "./SkillsCube";
-import Enhanced3DEffects from "./Enhanced3DEffects";
+import ParticlesBackground from "./ParticlesBackground";
 
 const SkillsSection = () => {
   const { skills } = useData();
@@ -28,14 +28,7 @@ const SkillsSection = () => {
   return (
     <section id="skills" className="bg-muted/40 relative overflow-hidden">
       {/* Full-screen background with particle effects */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        <Enhanced3DEffects
-          height="100%"
-          interactive={false}
-          showParticles={true}
-          showPanels={false}
-        />
-      </div>
+      <ParticlesBackground />
 
       <div className="container mx-auto relative z-10">
         <h2 className="section-title">My Skills</h2>
@@ -148,23 +141,6 @@ const SkillsSection = () => {
               <SkillsGrid skills={filteredSkills} />
             </TabsContent>
           </Tabs>
-
-          {/* Small 3D effect for mobile */}
-          <div className="mt-8 h-[200px]">
-            <motion.div
-              initial={{ opacity: 1 }}
-              animate={{ opacity: 1 }}
-              className="h-full w-full rounded-lg overflow-hidden border border-primary/10 shadow-md"
-            >
-              <Enhanced3DEffects
-                height="100%"
-                interactive={true}
-                showParticles={true}
-                showPanels={true}
-                className="dark:bg-slate-900/80 bg-slate-100/80"
-              />
-            </motion.div>
-          </div>
         </div>
       </div>
     </section>
