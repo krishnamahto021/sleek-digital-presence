@@ -18,12 +18,11 @@ app.use(express.json());
 app.use(apiLimiter);
 
 // Routes
-app.use("/api", contactRouter);
-
 // Base route
 app.get("/", (req: Request, res: Response): void => {
   res.send("Server is running!");
 });
+app.use("/api", contactRouter);
 
 // Start server
 app.listen(PORT, () => {
