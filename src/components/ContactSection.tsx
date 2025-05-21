@@ -232,7 +232,7 @@ const ContactSection = () => {
                   disabled={isSubmitting}
                   className={`bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm border-slate-200 dark:border-slate-600 focus:border-blue-400 dark:focus:border-blue-500 h-12 ${
                     errors.name ? "border-red-500" : ""
-                  }`}
+                  } cursor-text`}
                 />
                 {errors.name && (
                   <p className="text-red-500 text-sm mt-1">
@@ -249,7 +249,7 @@ const ContactSection = () => {
                   disabled={isSubmitting}
                   className={`bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm border-slate-200 dark:border-slate-600 focus:border-blue-400 dark:focus:border-blue-500 h-12 ${
                     errors.email ? "border-red-500" : ""
-                  }`}
+                  } cursor-text`}
                 />
                 {errors.email && (
                   <p className="text-red-500 text-sm mt-1">
@@ -264,9 +264,9 @@ const ContactSection = () => {
                   rows={5}
                   {...register("message")}
                   disabled={isSubmitting}
-                  className={`bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm border-slate-200 dark:border-slate-600 focus:border-blue-400 dark:focus:border-blue-500 ${
+                  className={`bg-white/70 resize-none dark:bg-slate-700/70 backdrop-blur-sm border-slate-200 dark:border-slate-600 focus:border-blue-400 dark:focus:border-blue-500 ${
                     errors.message ? "border-red-500" : ""
-                  }`}
+                  } cursor-text`}
                 />
                 {errors.message && (
                   <p className="text-red-500 text-sm mt-1">
