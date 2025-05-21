@@ -40,19 +40,23 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   const githubColors = useMemo(() => {
     if (theme === "dark") {
       return [
-        "rgb(33, 38, 45)", // #21262d - dark gray
-        "rgb(64, 120, 192)", // #4078c0 - GitHub blue
-        "rgb(88, 166, 255)", // #58a6ff - blue accent
-        "rgb(47, 54, 61)", // #2f363d - medium gray
-        "rgb(13, 17, 23)", // #0d1117 - dark background
+        "rgb(13, 17, 23)", // Base dark background
+        "rgb(27, 31, 35)", // Lighter dark background
+        "rgb(40, 167, 69)", // Green contribution color
+        "rgb(56, 211, 79)", // Medium-high intensity green
+        "rgb(38, 166, 154)", // Teal variation
+        "rgb(0, 92, 197)", // Blue accent
+        "rgb(61, 217, 132)", // Bright green (high activity)
       ];
     } else {
       return [
-        "rgb(208, 215, 222)", // #d0d7de - light gray border
-        "rgb(36, 41, 47)", // #24292f - dark text
-        "rgb(110, 119, 129)", // #6e7781 - gray text
-        "rgb(246, 248, 250)", // #f6f8fa - light gray background
-        "rgb(234, 238, 242)", // #eaeff2 - light gray hover
+        "rgb(235, 237, 240)", // Light background
+        "rgb(155, 233, 168)", // Light green
+        "rgb(64, 196, 99)", // Medium green
+        "rgb(48, 161, 78)", // Dark green (high activity)
+        "rgb(33, 110, 57)", // Very dark green (highest activity)
+        "rgb(208, 215, 222)", // Light gray borders
+        "rgb(13, 176, 152)", // Teal accent
       ];
     }
   }, [theme]);

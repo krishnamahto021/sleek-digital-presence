@@ -77,9 +77,7 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
@@ -87,10 +85,34 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+    cursor: default;
   }
 
   html {
     @apply scroll-smooth;
+  }
+
+  /* Ensure text doesn't show the text cursor by default */
+  p, h1, h2, h3, h4, h5, h6, span, div {
+    cursor: default;
+    user-select: none;
+  }
+
+  /* Restore pointer cursor for interactive elements */
+  a, button, [role="button"], input, select, textarea, label, .cursor-pointer {
+    cursor: pointer;
+  }
+
+  /* Allow text selection in specific content areas */
+  .allow-select {
+    user-select: text;
+    cursor: text;
+  }
+
+  /* Code blocks should allow selection */
+  code, pre {
+    user-select: text;
+    cursor: text;
   }
 
   section {

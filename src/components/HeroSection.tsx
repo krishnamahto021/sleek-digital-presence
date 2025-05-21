@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowDown, FileText, Mail, Rocket } from "lucide-react";
 import { Link } from "react-scroll";
@@ -7,6 +7,7 @@ import { useData } from "../contexts/DataContext";
 import WaveBackground from "./WaveBackground";
 
 import { Button } from "@/components/ui/button";
+import Shape3D from "./Shape3D";
 
 const HeroSection = () => {
   const { bio } = useData();
@@ -36,23 +37,63 @@ const HeroSection = () => {
   return (
     <section
       id="hero"
-      className="min-h-screen flex items-center justify-center relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center relative overflow-hidden select-none"
     >
-      {/* Wave background animation - increased opacity and z-index */}
+      {/* Wave background */}
       <div className="absolute inset-0 z-0 opacity-60">
         <WaveBackground />
       </div>
 
-      {/* Background gradient animation - adjusted for better wave visibility */}
+      {/* 3D Shapes - Left Side */}
+      <Shape3D
+        position="left-[5%]  top-[10%]"
+        color="primary"
+        delay={0}
+        shape="cube"
+      />
+      <Shape3D
+        position="left-[15%]  top-[25%]"
+        color="secondary"
+        delay={1.5}
+        shape="pyramid"
+      />
+      <Shape3D
+        position="left-[8%] top-[80%]"
+        color="primary"
+        delay={0.8}
+        shape="donut"
+      />
+
+      {/* 3D Shapes - Right Side */}
+      <Shape3D
+        position="right-[6%] top-[10%]"
+        color="secondary"
+        delay={0.5}
+        shape="sphere"
+      />
+      <Shape3D
+        position="right-[10%] top-[25%]"
+        color="primary"
+        delay={1.2}
+        shape="cube"
+      />
+      <Shape3D
+        position="right-[14%] top-[80%]"
+        color="secondary"
+        delay={0.3}
+        shape="triangle"
+      />
+
+      {/* Background gradient overlay */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-background/70 to-background/50 z-2"
+        className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/40 to-background/70 z-1"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
       />
 
       <div className="container mx-auto relative z-10 px-4 sm:px-6 lg:px-8 py-12 md:py-24">
-        <div className="flex flex-col items-center justify-center text-center">
+        <div className="flex flex-col items-center justify-center text-center cursor-default">
           <motion.div
             className="flex items-center gap-2 text-primary mb-4"
             custom={1}
@@ -116,6 +157,7 @@ const HeroSection = () => {
               whileTap="tap"
               onHoverStart={() => setHoveredButton("cv")}
               onHoverEnd={() => setHoveredButton(null)}
+              className="interactive-element cursor-pointer"
             >
               <Button
                 className="flex items-center gap-2 relative text-base"
@@ -144,6 +186,7 @@ const HeroSection = () => {
               whileTap="tap"
               onHoverStart={() => setHoveredButton("contact")}
               onHoverEnd={() => setHoveredButton(null)}
+              className="interactive-element cursor-pointer"
             >
               <Button
                 variant="outline"
@@ -166,18 +209,10 @@ const HeroSection = () => {
               </Button>
             </motion.div>
           </motion.div>
-
-          {/* Interactive background element */}
-          <motion.div
-            className="w-full mt-20 flex justify-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.7 }}
-          ></motion.div>
         </div>
       </div>
 
-      {/* Scroll indicator with improved animation */}
+      {/* Scroll indicator with subtle animation */}
       <motion.div
         className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
         initial={{ opacity: 0, y: -10 }}
@@ -193,10 +228,10 @@ const HeroSection = () => {
             smooth={true}
             duration={500}
             offset={-70}
-            className="cursor-pointer group"
+            className="cursor-pointer group interactive-element"
           >
             <motion.div
-              className="p-3 rounded-full bg-primary/30 group-hover:bg-primary/50 transition-colors duration-300"
+              className="p-3 rounded-full bg-primary/20 group-hover:bg-primary/30 transition-colors duration-300"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >

@@ -38,16 +38,16 @@ const SkillsSection = () => {
          radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
          radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
          radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0))`
-      : `radial-gradient(2px 2px at 20px 30px, #333, rgba(0,0,0,0)),
-         radial-gradient(2px 2px at 40px 70px, #444, rgba(0,0,0,0)),
-         radial-gradient(2px 2px at 50px 160px, #222, rgba(0,0,0,0)),
-         radial-gradient(2px 2px at 90px 40px, #333, rgba(0,0,0,0)),
-         radial-gradient(2px 2px at 130px 80px, #222, rgba(0,0,0,0)),
-         radial-gradient(2px 2px at 160px 120px, #111, rgba(0,0,0,0))`,
+      : `radial-gradient(3px 3px at 20px 30px, #333, rgba(0,0,0,0)),
+         radial-gradient(3px 3px at 40px 70px, #444, rgba(0,0,0,0)),
+         radial-gradient(3px 3px at 50px 160px, #222, rgba(0,0,0,0)),
+         radial-gradient(3px 3px at 90px 40px, #333, rgba(0,0,0,0)),
+         radial-gradient(3px 3px at 130px 80px, #222, rgba(0,0,0,0)),
+         radial-gradient(3px 3px at 160px 120px, #111, rgba(0,0,0,0))`,
     backgroundRepeat: "repeat",
     backgroundSize: "200px 200px",
     animation: "twinkle 5s ease-in-out infinite",
-    opacity: isDark ? 0.3 : 0.15,
+    opacity: isDark ? 0.6 : 0.3,
   };
 
   // Create CSS for the twinkle animation
@@ -55,9 +55,9 @@ const SkillsSection = () => {
     const style = document.createElement("style");
     style.innerHTML = `
       @keyframes twinkle {
-        0% { opacity: ${isDark ? 0.3 : 0.15}; }
-        50% { opacity: ${isDark ? 0.5 : 0.3}; }
-        100% { opacity: ${isDark ? 0.3 : 0.15}; }
+        0% { opacity: ${isDark ? 0.6 : 0.3}; }
+        50% { opacity: ${isDark ? 0.9 : 0.6}; }
+        100% { opacity: ${isDark ? 0.6 : 0.3}; }
       }
     `;
     document.head.appendChild(style);
@@ -74,7 +74,7 @@ const SkillsSection = () => {
     >
       {/* Background with stars */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.15)_0%,rgba(0,0,0,0)_80%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.3)_0%,rgba(0,0,0,0)_80%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.25)_0%,rgba(0,0,0,0)_80%)]" />
         <div className="stars absolute inset-0" style={starsStyle} />
       </div>
 

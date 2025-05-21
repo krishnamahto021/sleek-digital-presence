@@ -5,6 +5,20 @@
   text-align: center;
 }
 
+/* Text cursor and selection rules */
+.content-area {
+  user-select: text;
+  cursor: auto;
+}
+
+.content-area p,
+.content-area li,
+.content-area pre,
+.content-area code,
+.content-area blockquote {
+  cursor: auto;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

@@ -49,8 +49,8 @@ export const ShootingStars: React.FC<ShootingStarsProps> = ({
   maxDelay = 4200,
   starColor = "#9E00FF",
   trailColor = "#2EB9DF",
-  starWidth = 10,
-  starHeight = 1,
+  starWidth = 15,
+  starHeight = 2,
   className,
 }) => {
   const [star, setStar] = useState<ShootingStar | null>(null);
@@ -143,7 +143,10 @@ export const ShootingStars: React.FC<ShootingStarsProps> = ({
       )}
       <defs>
         <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{ stopColor: trailColor, stopOpacity: 0 }} />
+          <stop
+            offset="0%"
+            style={{ stopColor: trailColor, stopOpacity: 0.2 }}
+          />
           <stop
             offset="100%"
             style={{ stopColor: starColor, stopOpacity: 1 }}

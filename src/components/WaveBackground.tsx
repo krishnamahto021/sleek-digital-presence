@@ -1,26 +1,41 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useTheme } from "../contexts/ThemeContext";
 
 const WaveBackground = () => {
   const { theme } = useTheme();
+  const [isMounted, setIsMounted] = useState(false);
+  const { scrollY } = useScroll();
 
-  // Theme-aware colors with increased opacity for better visibility
+  // Parallax effect values
+  const y1 = useTransform(scrollY, [0, 1000], [0, 150]);
+  const y2 = useTransform(scrollY, [0, 1000], [0, 100]);
+  const y3 = useTransform(scrollY, [0, 1000], [0, 50]);
+
+  // Theme-aware colors with significantly increased opacity for better visibility
   const primaryColor =
-    theme === "dark" ? "rgba(121, 131, 229, 0.25)" : "rgba(73, 89, 231, 0.20)";
+    theme === "dark" ? "rgba(121, 131, 229, 0.7)" : "rgba(73, 89, 231, 0.6)";
   const secondaryColor =
-    theme === "dark" ? "rgba(82, 172, 255, 0.25)" : "rgba(47, 133, 224, 0.20)";
+    theme === "dark" ? "rgba(82, 172, 255, 0.7)" : "rgba(47, 133, 224, 0.6)";
   const accentColor =
-    theme === "dark" ? "rgba(232, 121, 249, 0.18)" : "rgba(217, 70, 239, 0.15)";
+    theme === "dark" ? "rgba(232, 121, 249, 0.55)" : "rgba(217, 70, 239, 0.5)";
+
+  // Ensure we only run animations client-side
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
 
   return (
     <div className="absolute inset-0 overflow-hidden z-0">
-      {/* First wave layer - slower movement */}
+      {/* First wave layer - slower movement with parallax */}
       <motion.div
         className="absolute inset-0 z-0"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
+        style={{ y: y1 }}
       >
         <svg
           className="w-full h-full absolute top-0 left-0"
@@ -42,19 +57,20 @@ const WaveBackground = () => {
             transition={{
               repeat: Infinity,
               repeatType: "mirror",
-              duration: 24,
+              duration: 22,
               ease: "easeInOut",
             }}
           />
         </svg>
       </motion.div>
 
-      {/* Second wave layer - medium speed */}
+      {/* Second wave layer - medium speed with parallax */}
       <motion.div
         className="absolute inset-0 z-0"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.2 }}
+        style={{ y: y2 }}
       >
         <svg
           className="w-full h-full absolute top-0 left-0"
@@ -83,12 +99,13 @@ const WaveBackground = () => {
         </svg>
       </motion.div>
 
-      {/* Third wave layer - faster movement */}
+      {/* Third wave layer - faster movement with parallax */}
       <motion.div
         className="absolute inset-0 z-0"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.4 }}
+        style={{ y: y3 }}
       >
         <svg
           className="w-full h-full absolute top-0 left-0"
@@ -116,12 +133,12 @@ const WaveBackground = () => {
           />
         </svg>
       </motion.div>
-      
+
       {/* Fourth wave layer - fastest, subtlest movement */}
       <motion.div
         className="absolute inset-0 z-0"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.7 }}
+        animate={{ opacity: 0.8 }}
         transition={{ duration: 1, delay: 0.6 }}
       >
         <svg
@@ -131,7 +148,7 @@ const WaveBackground = () => {
         >
           <motion.path
             d="M0,160L40,165.3C80,171,160,181,240,197.3C320,213,400,235,480,224C560,213,640,171,720,165.3C800,160,880,192,960,197.3C1040,203,1120,181,1200,176C1280,171,1360,181,1400,186.7L1440,192L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z"
-            fill="rgba(255, 255, 255, 0.05)"
+            fill="rgba(255, 255, 255, 0.15)"
             initial={{ y: 250 }}
             animate={{
               y: [250, 200, 250],
