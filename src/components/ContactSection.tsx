@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useData } from "../contexts/DataContext";
-import { Mail, MapPin, Send } from "lucide-react";
+import { Mail, MapPin, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { ContactFormData } from "../types";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import {
+  sendContactForm,
+  resetContactStatus,
+} from "../store/slices/contactSlice";
 
 // Form validation schema
 const schema = yup
@@ -69,47 +74,65 @@ function ContactFloatingPaths({ position }: { position: number }) {
 const ContactSection = () => {
   const { bio } = useData();
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useAppDispatch();
+  const { status, error, successMessage } = useAppSelector(
+    (state) => state.contact
+  );
 
   const {
     register,
     handleSubmit,
-    reset,
+    reset: resetForm,
     formState: { errors },
   } = useForm<ContactFormData>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data: ContactFormData) => {
-    // Simulate API call
-    setIsSubmitting(true);
-
-    try {
-      // In a real app, this would be an API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      console.log("Form data submitted:", data);
-
+  // Reset form when submission succeeds
+  useEffect(() => {
+    if (status === "succeeded") {
+      resetForm();
       toast({
         title: "Message sent!",
-        description: "Thank you for your message. I'll get back to you soon.",
+        description:
+          successMessage ||
+          "Thank you for your message. I'll get back to you soon.",
       });
 
-      // Reset form
-      reset();
-    } catch (error) {
-      console.error("Error submitting form:", error);
+      // Reset the status after a delay
+      const timer = setTimeout(() => {
+        dispatch(resetContactStatus());
+      }, 2000);
 
+      return () => clearTimeout(timer);
+    }
+  }, [status, successMessage, dispatch, resetForm, toast]);
+
+  // Show error toast when submission fails
+  useEffect(() => {
+    if (status === "failed" && error) {
       toast({
         title: "Something went wrong!",
         description:
-          "There was an error sending your message. Please try again.",
+          error || "There was an error sending your message. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
+
+      // Reset the status after a delay
+      const timer = setTimeout(() => {
+        dispatch(resetContactStatus());
+      }, 2000);
+
+      return () => clearTimeout(timer);
     }
+  }, [status, error, dispatch, toast]);
+
+  const onSubmit = async (data: ContactFormData) => {
+    console.log(data);
+    dispatch(sendContactForm(data));
   };
+
+  const isSubmitting = status === "loading";
 
   return (
     <section
@@ -206,6 +229,7 @@ const ContactSection = () => {
                 <Input
                   placeholder="Your Name"
                   {...register("name")}
+                  disabled={isSubmitting}
                   className={`bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm border-slate-200 dark:border-slate-600 focus:border-blue-400 dark:focus:border-blue-500 h-12 ${
                     errors.name ? "border-red-500" : ""
                   }`}
@@ -222,6 +246,7 @@ const ContactSection = () => {
                   type="email"
                   placeholder="Your Email"
                   {...register("email")}
+                  disabled={isSubmitting}
                   className={`bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm border-slate-200 dark:border-slate-600 focus:border-blue-400 dark:focus:border-blue-500 h-12 ${
                     errors.email ? "border-red-500" : ""
                   }`}
@@ -238,6 +263,7 @@ const ContactSection = () => {
                   placeholder="Your Message"
                   rows={5}
                   {...register("message")}
+                  disabled={isSubmitting}
                   className={`bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm border-slate-200 dark:border-slate-600 focus:border-blue-400 dark:focus:border-blue-500 ${
                     errors.message ? "border-red-500" : ""
                   }`}
@@ -251,11 +277,14 @@ const ContactSection = () => {
 
               <Button
                 type="submit"
-                className="w-full flex items-center gap-2 mt-2 h-12 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 dark:from-blue-600 dark:to-purple-600 dark:hover:from-blue-500 dark:hover:to-purple-500 border-0 shadow-md hover:shadow-lg transition-all"
+                className="w-full flex items-center justify-center gap-2 mt-2 h-12 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 dark:from-blue-600 dark:to-purple-600 dark:hover:from-blue-500 dark:hover:to-purple-500 border-0 shadow-md hover:shadow-lg transition-all"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
-                  "Sending..."
+                  <>
+                    <Loader2 size={18} className="animate-spin mr-2" />
+                    Sending...
+                  </>
                 ) : (
                   <>
                     <Send size={18} />
