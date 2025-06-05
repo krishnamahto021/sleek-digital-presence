@@ -3,8 +3,24 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// Validate required environment variables
+const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
+const TO_EMAIL = process.env.TO_EMAIL;
+const FROM_EMAIL = process.env.FROM_EMAIL || "krishnamahato021@gmail.com";
+
+if (!SENDGRID_API_KEY) {
+  console.error("SENDGRID_API_KEY environment variable is required");
+}
+
+if (!TO_EMAIL) {
+  console.error("TO_EMAIL environment variable is required");
+}
+
 // Initialize SendGrid with API key
-sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
+if (SENDGRID_API_KEY) {
+  console.log("SENDGRID_API_KEY", SENDGRID_API_KEY);
+  sgMail.setApiKey(SENDGRID_API_KEY);
+}
 
 export interface EmailData {
   name: string;
@@ -14,6 +30,15 @@ export interface EmailData {
 }
 
 export const sendContactEmail = async (data: EmailData): Promise<void> => {
+  // Validate environment variables before attempting to send
+  if (!SENDGRID_API_KEY) {
+    throw new Error("SendGrid API key is not configured");
+  }
+
+  if (!TO_EMAIL) {
+    throw new Error("Recipient email is not configured");
+  }
+
   const {
     name,
     email,
@@ -21,9 +46,16 @@ export const sendContactEmail = async (data: EmailData): Promise<void> => {
     subject = "New Contact Form Submission",
   } = data;
 
+  // Validate required fields
+  if (!name || !email || !message) {
+    throw new Error(
+      "Missing required fields: name, email, and message are required"
+    );
+  }
+
   const msg = {
-    to: process.env.TO_EMAIL || "",
-    from: process.env.FROM_EMAIL || "krishnamahato021@gmail.com",
+    to: TO_EMAIL,
+    from: FROM_EMAIL,
     subject: subject,
     text: `Name: ${name}\nEmail: ${email}\n\nMessage: ${message}`,
     html: `
@@ -67,5 +99,24 @@ export const sendContactEmail = async (data: EmailData): Promise<void> => {
     `,
   };
 
-  await sgMail.send(msg);
+  try {
+    await sgMail.send(msg);
+    console.log("Email sent successfully");
+  } catch (error: any) {
+    console.error("SendGrid error:", error);
+
+    // Provide more specific error messages
+    if (error.code === 401) {
+      throw new Error("Invalid SendGrid API key");
+    } else if (error.code === 403) {
+      throw new Error("SendGrid API access forbidden - check your plan");
+    } else if (error.response?.body?.errors) {
+      const errors = error.response.body.errors
+        .map((err: any) => err.message)
+        .join(", ");
+      throw new Error(`SendGrid validation error: ${errors}`);
+    } else {
+      throw new Error(`Failed to send email: ${error.message}`);
+    }
+  }
 };

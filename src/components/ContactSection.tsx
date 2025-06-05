@@ -1,20 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useData } from "../contexts/DataContext";
-import { Mail, MapPin, Send, Loader2 } from "lucide-react";
+import {
+  Mail,
+  MapPin,
+  Send,
+  Loader2,
+  AlertCircle,
+  ExternalLink,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { ContactFormData } from "../types";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import {
-  sendContactForm,
-  resetContactStatus,
-} from "../store/slices/contactSlice";
+import apiClient from "../lib/axios";
 
 // Form validation schema
 const schema = yup
@@ -74,15 +77,20 @@ function ContactFloatingPaths({ position }: { position: number }) {
 const ContactSection = () => {
   const { bio } = useData();
   const { toast } = useToast();
-  const dispatch = useAppDispatch();
-  const { status, error, successMessage } = useAppSelector(
-    (state) => state.contact
-  );
+
+  // Local state to replace Redux
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "succeeded" | "failed"
+  >("idle");
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [showFallback, setShowFallback] = useState(false);
 
   const {
     register,
     handleSubmit,
     reset: resetForm,
+    getValues,
     formState: { errors },
   } = useForm<ContactFormData>({
     resolver: yupResolver(schema),
@@ -101,35 +109,80 @@ const ContactSection = () => {
 
       // Reset the status after a delay
       const timer = setTimeout(() => {
-        dispatch(resetContactStatus());
-      }, 2000);
+        setStatus("idle");
+        setSuccessMessage(null);
+        setError(null);
+        setShowFallback(false);
+      }, 3000);
 
       return () => clearTimeout(timer);
     }
-  }, [status, successMessage, dispatch, resetForm, toast]);
+  }, [status, successMessage, resetForm, toast]);
 
   // Show error toast when submission fails
   useEffect(() => {
     if (status === "failed" && error) {
       toast({
-        title: "Something went wrong!",
+        title: "Server Error",
         description:
-          error || "There was an error sending your message. Please try again.",
+          "The contact form is temporarily unavailable. Please try the email fallback below.",
         variant: "destructive",
       });
 
-      // Reset the status after a delay
+      // Show fallback after a delay
       const timer = setTimeout(() => {
-        dispatch(resetContactStatus());
-      }, 2000);
+        setShowFallback(true);
+      }, 1000);
 
       return () => clearTimeout(timer);
     }
-  }, [status, error, dispatch, toast]);
+  }, [status, error, toast]);
 
   const onSubmit = async (data: ContactFormData) => {
-    console.log(data);
-    dispatch(sendContactForm(data));
+    setStatus("loading");
+    setError(null);
+    setSuccessMessage(null);
+    setShowFallback(false);
+
+    try {
+      const response = await apiClient.post("/contact", data);
+      setStatus("succeeded");
+      setSuccessMessage(response.data.message || "Message sent successfully");
+    } catch (error: any) {
+      console.error("Contact form error:", error);
+      setStatus("failed");
+
+      // Handle validation errors
+      if (error.response?.data?.errors) {
+        setError(
+          error.response.data.errors.map((err: any) => err.msg).join(", ")
+        );
+      } else if (error.response?.status === 500) {
+        setError(
+          "Server is temporarily unavailable. Please use the email fallback below."
+        );
+      } else {
+        setError(
+          error.response?.data?.message ||
+            error.message ||
+            "Failed to send message. Please try the email fallback below."
+        );
+      }
+    }
+  };
+
+  // Generate mailto link with form data
+  const generateMailtoLink = () => {
+    const formData = getValues();
+    const subject = encodeURIComponent("Contact from Portfolio Website");
+    const body = encodeURIComponent(
+      `Hi Krishna,\n\nName: ${formData.name || "[Your Name]"}\nEmail: ${
+        formData.email || "[Your Email]"
+      }\n\nMessage:\n${
+        formData.message || "[Your Message]"
+      }\n\nBest regards,\n${formData.name || "[Your Name]"}`
+    );
+    return `mailto:${bio.email}?subject=${subject}&body=${body}`;
   };
 
   const isSubmitting = status === "loading";
@@ -215,6 +268,40 @@ const ContactSection = () => {
                 opportunities.
               </p>
             </div>
+
+            {/* Fallback Email Option */}
+            {(status === "failed" || showFallback) && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="p-4 border-2 border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-900/20 rounded-lg"
+              >
+                <div className="flex items-start space-x-3">
+                  <AlertCircle className="text-orange-500 mt-0.5" size={20} />
+                  <div>
+                    <h4 className="font-medium text-orange-800 dark:text-orange-200 mb-2">
+                      Alternative Contact Method
+                    </h4>
+                    <p className="text-sm text-orange-700 dark:text-orange-300 mb-3">
+                      The contact form is temporarily unavailable. You can email
+                      me directly:
+                    </p>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-orange-300 text-orange-700 hover:bg-orange-100 dark:border-orange-700 dark:text-orange-300 dark:hover:bg-orange-900/30"
+                      asChild
+                    >
+                      <a href={generateMailtoLink()}>
+                        <ExternalLink size={16} className="mr-2" />
+                        Open Email Client
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
           </motion.div>
 
           {/* Contact Form */}

@@ -48,9 +48,11 @@ const Navbar = () => {
         <Link
           to="hero"
           smooth={true}
-          duration={500}
+          duration={800}
           className="text-xl font-bold cursor-pointer"
           offset={-100}
+          spy={true}
+          isDynamic={true}
         >
           {bio.name.split(" ")[0]}
           <span className="text-primary">.</span>
@@ -64,10 +66,12 @@ const Navbar = () => {
               to={link.to}
               spy={true}
               smooth={true}
-              offset={-70}
-              duration={500}
+              offset={-80}
+              duration={800}
               className="nav-link cursor-pointer"
               activeClass="active"
+              isDynamic={true}
+              ignoreCancelEvents={false}
             >
               {link.title}
             </Link>
@@ -125,11 +129,13 @@ const Navbar = () => {
                   to={link.to}
                   spy={true}
                   smooth={true}
-                  offset={-70}
-                  duration={500}
-                  className="py-2 text-lg font-medium hover:text-primary"
+                  offset={-80}
+                  duration={800}
+                  className="py-2 text-lg font-medium hover:text-primary cursor-pointer"
                   activeClass="text-primary"
                   onClick={closeMenu}
+                  isDynamic={true}
+                  ignoreCancelEvents={false}
                 >
                   {link.title}
                 </Link>

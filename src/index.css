@@ -89,17 +89,62 @@
   }
 
   html {
-    @apply scroll-smooth;
+    /* Remove scroll-smooth to prevent conflicts with react-scroll */
+    scroll-behavior: auto;
+    /* Improve scrolling performance */
+    overflow-x: hidden;
+  }
+
+  body {
+    /* Prevent horizontal scroll */
+    overflow-x: hidden;
+    /* Optimize scrolling */
+    overscroll-behavior-y: none;
+  }
+
+  /* Improve scrolling performance for modern browsers */
+  * {
+    scroll-padding-top: 80px;
+  }
+
+  /* Ensure smooth animations don't interfere with scrolling */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 
   /* Ensure text doesn't show the text cursor by default */
-  p, h1, h2, h3, h4, h5, h6, span, div {
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  span,
+  div {
     cursor: default;
     user-select: none;
   }
 
   /* Restore pointer cursor for interactive elements */
-  a, button, [role="button"], input, select, textarea, label, .cursor-pointer {
+  a,
+  button,
+  [role="button"],
+  input,
+  select,
+  textarea,
+  label,
+  .cursor-pointer {
     cursor: pointer;
   }
 
@@ -110,7 +155,8 @@
   }
 
   /* Code blocks should allow selection */
-  code, pre {
+  code,
+  pre {
     user-select: text;
     cursor: text;
   }

@@ -2,7 +2,8 @@ import axios from "axios";
 
 // Create a base API instance with default configurations
 const apiClient = axios.create({
-  baseURL: "https://portofoli-email-server.vercel.app/api",
+  // baseURL: "https://portofoli-email-server.vercel.app/api",
+  baseURL: "http://localhost:3000/api",
   headers: {
     "Content-Type": "application/json",
   },

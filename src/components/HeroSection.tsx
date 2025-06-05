@@ -194,7 +194,15 @@ const HeroSection = () => {
                 size="lg"
                 asChild
               >
-                <Link to="contact" smooth={true} duration={500} offset={-70}>
+                <Link
+                  to="contact"
+                  smooth={true}
+                  duration={800}
+                  offset={-80}
+                  spy={true}
+                  isDynamic={true}
+                  ignoreCancelEvents={false}
+                >
                   <motion.span
                     initial={{ scale: 1 }}
                     animate={{
@@ -226,8 +234,11 @@ const HeroSection = () => {
           <Link
             to="about"
             smooth={true}
-            duration={500}
-            offset={-70}
+            duration={800}
+            offset={-80}
+            spy={true}
+            isDynamic={true}
+            ignoreCancelEvents={false}
             className="cursor-pointer group interactive-element"
           >
             <motion.div

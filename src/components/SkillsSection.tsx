@@ -9,7 +9,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import SkillsCube from "./SkillsCube";
-import { ShootingStars } from "./ui/shooting-stars";
 import SkillsGrid from "./SkillsGrid";
 import { useTheme } from "next-themes";
 
@@ -77,32 +76,6 @@ const SkillsSection = () => {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.3)_0%,rgba(0,0,0,0)_80%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.25)_0%,rgba(0,0,0,0)_80%)]" />
         <div className="stars absolute inset-0" style={starsStyle} />
       </div>
-
-      {/* Multiple shooting star layers with different colors and speeds */}
-      <ShootingStars
-        starColor={isDark ? "#9E00FF" : "#6000A0"}
-        trailColor={isDark ? "#2EB9DF" : "#0080A0"}
-        minSpeed={15}
-        maxSpeed={35}
-        minDelay={1000}
-        maxDelay={3000}
-      />
-      <ShootingStars
-        starColor={isDark ? "#FF0099" : "#C00060"}
-        trailColor={isDark ? "#FFB800" : "#DB8300"}
-        minSpeed={10}
-        maxSpeed={25}
-        minDelay={2000}
-        maxDelay={4000}
-      />
-      <ShootingStars
-        starColor={isDark ? "#00FF9E" : "#00B070"}
-        trailColor={isDark ? "#00B8FF" : "#0070B0"}
-        minSpeed={20}
-        maxSpeed={40}
-        minDelay={1500}
-        maxDelay={3500}
-      />
 
       <div className="container mx-auto relative z-10">
         <h2 className="section-title">My Skills</h2>
