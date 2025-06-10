@@ -12,9 +12,21 @@ import {
   AlertCircle,
   ExternalLink,
 } from "lucide-react";
+import {
+  Box,
+  Container,
+  Typography,
+  Grid,
+  TextField,
+  Paper,
+  Alert,
+  Stack,
+  IconButton,
+  Avatar,
+  useTheme,
+} from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { ContactFormData } from "../types";
 import apiClient from "../lib/axios";
@@ -47,8 +59,12 @@ function ContactFloatingPaths({ position }: { position: number }) {
   }));
 
   return (
-    <div className="absolute inset-0 pointer-events-none">
-      <svg className="w-full h-full" viewBox="0 0 696 316" fill="none">
+    <Box sx={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+      <svg
+        style={{ width: "100%", height: "100%" }}
+        viewBox="0 0 696 316"
+        fill="none"
+      >
         {paths.map((path) => (
           <motion.path
             key={path.id}
@@ -70,11 +86,12 @@ function ContactFloatingPaths({ position }: { position: number }) {
           />
         ))}
       </svg>
-    </div>
+    </Box>
   );
 }
 
 const ContactSection = () => {
+  const theme = useTheme();
   const { bio } = useData();
   const { toast } = useToast();
 
@@ -188,202 +205,483 @@ const ContactSection = () => {
   const isSubmitting = status === "loading";
 
   return (
-    <section
+    <Box
+      component="section"
       id="contact"
-      className="relative bg-slate-50 dark:bg-slate-900 overflow-hidden py-16"
+      sx={{
+        position: "relative",
+        bgcolor: "background.default",
+        overflow: "hidden",
+        py: {
+          xs: theme.custom.sectionSpacing.mobile,
+          md: theme.custom.sectionSpacing.desktop,
+        },
+      }}
     >
       {/* Background gradient blobs */}
-      <div className="absolute inset-0 overflow-hidden opacity-30 dark:opacity-40">
-        <div className="absolute top-0 -left-40 w-96 h-96 bg-blue-400 dark:bg-blue-600 rounded-full filter blur-3xl opacity-20"></div>
-        <div className="absolute top-40 right-0 w-80 h-80 bg-purple-400 dark:bg-purple-600 rounded-full filter blur-3xl opacity-20"></div>
-        <div className="absolute bottom-0 left-20 w-72 h-72 bg-pink-400 dark:bg-pink-600 rounded-full filter blur-3xl opacity-20"></div>
-      </div>
+      <Box
+        sx={{
+          position: "absolute",
+          inset: 0,
+          overflow: "hidden",
+          opacity: 0.3,
+        }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: -160,
+            width: 384,
+            height: 384,
+            bgcolor: "primary.main",
+            borderRadius: "50%",
+            filter: "blur(48px)",
+            opacity: 0.2,
+          }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            top: 160,
+            right: 0,
+            width: 320,
+            height: 320,
+            bgcolor: "secondary.main",
+            borderRadius: "50%",
+            filter: "blur(48px)",
+            opacity: 0.2,
+          }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            left: 80,
+            width: 288,
+            height: 288,
+            bgcolor: "secondary.light",
+            borderRadius: "50%",
+            filter: "blur(48px)",
+            opacity: 0.2,
+          }}
+        />
+      </Box>
 
       {/* Animated background paths */}
-      <div className="absolute inset-0">
+      <Box sx={{ position: "absolute", inset: 0 }}>
         <ContactFloatingPaths position={1} />
         <ContactFloatingPaths position={-1} />
-      </div>
+      </Box>
 
-      <div className="container mx-auto relative z-10">
-        <motion.h2
-          className="section-title text-center mb-10 text-4xl font-bold text-slate-800 dark:text-white"
+      <Container maxWidth="lg" sx={{ position: "relative", zIndex: 10 }}>
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          Get In Touch
-        </motion.h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto backdrop-blur-md bg-white/90 dark:bg-slate-800/90 rounded-xl p-8 shadow-xl border border-slate-200/80 dark:border-slate-700/80">
-          {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="space-y-6"
+          <Typography
+            variant="h2"
+            component="h2"
+            sx={{
+              textAlign: "center",
+              mb: theme.spacing(5),
+              color: "text.primary",
+            }}
           >
-            <h3 className="text-2xl font-bold mb-6 text-slate-800 dark:text-white">
-              Contact Information
-            </h3>
+            Get In Touch
+          </Typography>
+        </motion.div>
 
-            <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <div className="bg-gradient-to-br from-blue-500 to-purple-500 text-white p-3 rounded-full shadow-md">
-                  <Mail size={20} />
-                </div>
-                <div>
-                  <h4 className="font-medium text-slate-700 dark:text-slate-200">
-                    Email
-                  </h4>
-                  <a
-                    href={`mailto:${bio.email}`}
-                    className="text-slate-600 dark:text-slate-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
-                  >
-                    {bio.email}
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="bg-gradient-to-br from-purple-500 to-pink-500 text-white p-3 rounded-full shadow-md">
-                  <MapPin size={20} />
-                </div>
-                <div>
-                  <h4 className="font-medium text-slate-700 dark:text-slate-200">
-                    Location
-                  </h4>
-                  <p className="text-slate-600 dark:text-slate-300">
-                    {bio.location}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-6">
-              <p className="text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700/50 p-4 rounded-lg border border-slate-200 dark:border-slate-600/50 italic">
-                I'm always open to discussing product design work or partnership
-                opportunities.
-              </p>
-            </div>
-
-            {/* Fallback Email Option */}
-            {(status === "failed" || showFallback) && (
+        <Paper
+          elevation={6}
+          sx={{
+            maxWidth: { xs: "100%", md: 1024 },
+            mx: "auto",
+            backdropFilter: "blur(16px)",
+            bgcolor: "background.paper",
+            borderRadius: theme.custom.borderRadius.large,
+            p: {
+              xs: theme.spacing(2),
+              sm: theme.spacing(3),
+              md: theme.custom.cardSpacing.padding,
+            },
+            border: "1px solid",
+            borderColor: "divider",
+          }}
+        >
+          <Grid
+            container
+            spacing={{ xs: theme.spacing(3), md: theme.spacing(4) }}
+          >
+            {/* Contact Info */}
+            <Grid item xs={12} md={6}>
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
-                className="p-4 border-2 border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-900/20 rounded-lg"
+                viewport={{ once: true }}
               >
-                <div className="flex items-start space-x-3">
-                  <AlertCircle className="text-orange-500 mt-0.5" size={20} />
-                  <div>
-                    <h4 className="font-medium text-orange-800 dark:text-orange-200 mb-2">
-                      Alternative Contact Method
-                    </h4>
-                    <p className="text-sm text-orange-700 dark:text-orange-300 mb-3">
-                      The contact form is temporarily unavailable. You can email
-                      me directly:
-                    </p>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="border-orange-300 text-orange-700 hover:bg-orange-100 dark:border-orange-700 dark:text-orange-300 dark:hover:bg-orange-900/30"
-                      asChild
+                <Typography
+                  variant="h4"
+                  component="h3"
+                  sx={{
+                    mb: theme.spacing(3),
+                    color: "text.primary",
+                    fontSize: { xs: "1.5rem", sm: "1.75rem", md: "2rem" },
+                  }}
+                >
+                  Contact Information
+                </Typography>
+
+                <Stack spacing={theme.spacing(3)}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: { xs: theme.spacing(1.5), sm: theme.spacing(2) },
+                    }}
+                  >
+                    <Avatar
+                      sx={{
+                        background: theme.custom.gradients.primary,
+                        color: "white",
+                        width: { xs: 40, sm: 48 },
+                        height: { xs: 40, sm: 48 },
+                      }}
                     >
-                      <a href={generateMailtoLink()}>
-                        <ExternalLink size={16} className="mr-2" />
-                        Open Email Client
-                      </a>
-                    </Button>
-                  </div>
-                </div>
+                      <Mail size={20} />
+                    </Avatar>
+                    <Box sx={{ minWidth: 0, flex: 1 }}>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 500,
+                          color: "text.primary",
+                          fontSize: { xs: "1rem", sm: "1.125rem" },
+                        }}
+                      >
+                        Email
+                      </Typography>
+                      <Typography
+                        component="a"
+                        href={`mailto:${bio.email}`}
+                        sx={{
+                          color: "text.secondary",
+                          textDecoration: "none",
+                          wordBreak: "break-word",
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                          "&:hover": {
+                            color: "primary.main",
+                            textDecoration: "underline",
+                          },
+                          transition: `color ${theme.custom.transitions.normal} ease`,
+                        }}
+                      >
+                        {bio.email}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: { xs: theme.spacing(1.5), sm: theme.spacing(2) },
+                    }}
+                  >
+                    <Avatar
+                      sx={{
+                        background: theme.custom.gradients.secondary,
+                        color: "white",
+                        width: { xs: 40, sm: 48 },
+                        height: { xs: 40, sm: 48 },
+                      }}
+                    >
+                      <MapPin size={20} />
+                    </Avatar>
+                    <Box sx={{ minWidth: 0, flex: 1 }}>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 500,
+                          color: "text.primary",
+                          fontSize: { xs: "1rem", sm: "1.125rem" },
+                        }}
+                      >
+                        Location
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: "text.secondary",
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                        }}
+                      >
+                        {bio.location}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Stack>
+
+                <Paper
+                  variant="outlined"
+                  sx={{
+                    mt: theme.spacing(3),
+                    p: { xs: theme.spacing(1.5), sm: theme.spacing(2) },
+                    bgcolor: "background.paper",
+                    borderColor: "divider",
+                    borderRadius: theme.custom.borderRadius.medium,
+                  }}
+                >
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color: "text.secondary",
+                      fontStyle: "italic",
+                      fontSize: { xs: "0.875rem", sm: "1rem" },
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    I'm always open to discussing product design work or
+                    partnership opportunities.
+                  </Typography>
+                </Paper>
+
+                {/* Fallback Email Option */}
+                {(status === "failed" || showFallback) && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <Alert
+                      severity="warning"
+                      sx={{ mt: theme.spacing(2) }}
+                      action={
+                        <Button size="sm" variant="outline" asChild>
+                          <a href={generateMailtoLink()}>
+                            <ExternalLink size={16} className="mr-2" />
+                            Open Email Client
+                          </a>
+                        </Button>
+                      }
+                    >
+                      <Typography
+                        variant="subtitle2"
+                        sx={{ fontWeight: 500, mb: 1 }}
+                      >
+                        Alternative Contact Method
+                      </Typography>
+                      <Typography variant="body2">
+                        The contact form is temporarily unavailable. You can
+                        email me directly.
+                      </Typography>
+                    </Alert>
+                  </motion.div>
+                )}
               </motion.div>
-            )}
-          </motion.div>
+            </Grid>
 
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-              <div>
-                <Input
-                  placeholder="Your Name"
-                  {...register("name")}
-                  disabled={isSubmitting}
-                  className={`bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm border-slate-200 dark:border-slate-600 focus:border-blue-400 dark:focus:border-blue-500 h-12 ${
-                    errors.name ? "border-red-500" : ""
-                  } cursor-text`}
-                />
-                {errors.name && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.name.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <Input
-                  type="email"
-                  placeholder="Your Email"
-                  {...register("email")}
-                  disabled={isSubmitting}
-                  className={`bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm border-slate-200 dark:border-slate-600 focus:border-blue-400 dark:focus:border-blue-500 h-12 ${
-                    errors.email ? "border-red-500" : ""
-                  } cursor-text`}
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <Textarea
-                  placeholder="Your Message"
-                  rows={5}
-                  {...register("message")}
-                  disabled={isSubmitting}
-                  className={`bg-white/70 resize-none dark:bg-slate-700/70 backdrop-blur-sm border-slate-200 dark:border-slate-600 focus:border-blue-400 dark:focus:border-blue-500 ${
-                    errors.message ? "border-red-500" : ""
-                  } cursor-text`}
-                />
-                {errors.message && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.message.message}
-                  </p>
-                )}
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full flex items-center justify-center gap-2 mt-2 h-12 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 dark:from-blue-600 dark:to-purple-600 dark:hover:from-blue-500 dark:hover:to-purple-500 border-0 shadow-md hover:shadow-lg transition-all"
-                disabled={isSubmitting}
+            {/* Contact Form */}
+            <Grid item xs={12} md={6}>
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
               >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 size={18} className="animate-spin mr-2" />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send size={18} />
-                    Send Message
-                  </>
-                )}
-              </Button>
-            </form>
-          </motion.div>
-        </div>
-      </div>
-    </section>
+                <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+                  <Stack
+                    spacing={{ xs: theme.spacing(2.5), sm: theme.spacing(3) }}
+                  >
+                    <TextField
+                      fullWidth
+                      placeholder="Your Name"
+                      {...register("name")}
+                      disabled={isSubmitting}
+                      error={!!errors.name}
+                      helperText={errors.name?.message}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          backgroundColor: "background.paper",
+                          borderRadius: theme.custom.borderRadius.medium,
+                          "& fieldset": {
+                            borderColor: "divider",
+                            borderWidth: "1px",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "primary.main",
+                            borderWidth: "1px",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "primary.main",
+                            borderWidth: "2px",
+                            boxShadow: `0 0 0 1px ${theme.palette.primary.main}20`,
+                          },
+                          "&.Mui-error fieldset": {
+                            borderColor: "error.main",
+                          },
+                          "&.Mui-disabled": {
+                            backgroundColor: "action.disabledBackground",
+                          },
+                        },
+                        "& .MuiOutlinedInput-input": {
+                          padding: { xs: "12px 14px", sm: "16px 14px" },
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                        },
+                        "& .MuiFormHelperText-root": {
+                          marginLeft: 0,
+                          fontSize: "0.75rem",
+                        },
+                      }}
+                    />
+
+                    <TextField
+                      fullWidth
+                      type="email"
+                      placeholder="Your Email"
+                      {...register("email")}
+                      disabled={isSubmitting}
+                      error={!!errors.email}
+                      helperText={errors.email?.message}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          backgroundColor: "background.paper",
+                          borderRadius: theme.custom.borderRadius.medium,
+                          "& fieldset": {
+                            borderColor: "divider",
+                            borderWidth: "1px",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "primary.main",
+                            borderWidth: "1px",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "primary.main",
+                            borderWidth: "2px",
+                            boxShadow: `0 0 0 1px ${theme.palette.primary.main}20`,
+                          },
+                          "&.Mui-error fieldset": {
+                            borderColor: "error.main",
+                          },
+                          "&.Mui-disabled": {
+                            backgroundColor: "action.disabledBackground",
+                          },
+                        },
+                        "& .MuiOutlinedInput-input": {
+                          padding: { xs: "12px 14px", sm: "16px 14px" },
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                        },
+                        "& .MuiFormHelperText-root": {
+                          marginLeft: 0,
+                          fontSize: "0.75rem",
+                        },
+                      }}
+                    />
+
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={{ xs: 4, sm: 5 }}
+                      placeholder="Your Message"
+                      {...register("message")}
+                      disabled={isSubmitting}
+                      error={!!errors.message}
+                      helperText={errors.message?.message}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          backgroundColor: "background.paper",
+                          borderRadius: theme.custom.borderRadius.medium,
+                          "& fieldset": {
+                            borderColor: "divider",
+                            borderWidth: "1px",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "primary.main",
+                            borderWidth: "1px",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "primary.main",
+                            borderWidth: "2px",
+                            boxShadow: `0 0 0 1px ${theme.palette.primary.main}20`,
+                          },
+                          "&.Mui-error fieldset": {
+                            borderColor: "error.main",
+                          },
+                          "&.Mui-disabled": {
+                            backgroundColor: "action.disabledBackground",
+                          },
+                        },
+                        "& .MuiOutlinedInput-input": {
+                          padding: { xs: "12px 14px", sm: "16px 14px" },
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
+                        },
+                        "& .MuiFormHelperText-root": {
+                          marginLeft: 0,
+                          fontSize: "0.75rem",
+                        },
+                      }}
+                    />
+
+                    <LoadingButton
+                      type="submit"
+                      fullWidth
+                      size="large"
+                      loading={isSubmitting}
+                      loadingPosition="start"
+                      startIcon={
+                        isSubmitting ? (
+                          <Loader2 size={18} />
+                        ) : (
+                          <Send size={18} />
+                        )
+                      }
+                      sx={{
+                        height: { xs: 44, sm: 48 },
+                        background: theme.custom.gradients.primary,
+                        color: "white",
+                        fontWeight: 600,
+                        fontSize: { xs: "0.875rem", sm: "1rem" },
+                        borderRadius: theme.custom.borderRadius.medium,
+                        boxShadow: theme.custom.shadows.button,
+                        transition: `all ${theme.custom.transitions.normal} ease`,
+                        "&:hover": {
+                          background:
+                            theme.palette.mode === "dark"
+                              ? "linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)"
+                              : "linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%)",
+                          boxShadow: theme.custom.shadows.cardHover,
+                          transform: "translateY(-1px)",
+                        },
+                        "&:focus": {
+                          outline: `2px solid ${theme.palette.primary.main}`,
+                          outlineOffset: "2px",
+                        },
+                        "&.Mui-disabled": {
+                          background: theme.palette.action.disabledBackground,
+                          color: theme.palette.action.disabled,
+                        },
+                        // Ensure text is always visible
+                        "& .MuiLoadingButton-label": {
+                          color: "inherit",
+                        },
+                        "& .MuiButton-startIcon": {
+                          color: "inherit",
+                        },
+                      }}
+                    >
+                      {isSubmitting ? "Sending..." : "Send Message"}
+                    </LoadingButton>
+                  </Stack>
+                </Box>
+              </motion.div>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Container>
+    </Box>
   );
 };
 

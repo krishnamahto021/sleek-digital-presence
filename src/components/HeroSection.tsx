@@ -3,6 +3,14 @@ import { motion } from "framer-motion";
 import { ArrowDown, FileText, Mail, Rocket } from "lucide-react";
 import { Link } from "react-scroll";
 import { useData } from "../contexts/DataContext";
+import {
+  Box,
+  Container,
+  Typography,
+  Fab,
+  Stack,
+  useTheme,
+} from "@mui/material";
 
 import WaveBackground from "./WaveBackground";
 
@@ -10,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import Shape3D from "./Shape3D";
 
 const HeroSection = () => {
+  const theme = useTheme();
   const { bio } = useData();
   const [hoveredButton, setHoveredButton] = useState(null);
 
@@ -35,14 +44,23 @@ const HeroSection = () => {
   };
 
   return (
-    <section
+    <Box
+      component="section"
       id="hero"
-      className="min-h-screen flex items-center justify-center relative overflow-hidden select-none"
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+        overflow: "hidden",
+        userSelect: "none",
+      }}
     >
       {/* Wave background */}
-      <div className="absolute inset-0 z-0 opacity-60">
+      <Box sx={{ position: "absolute", inset: 0, zIndex: 0, opacity: 0.6 }}>
         <WaveBackground />
-      </div>
+      </Box>
 
       {/* 3D Shapes - Left Side */}
       <Shape3D
@@ -92,137 +110,218 @@ const HeroSection = () => {
         transition={{ duration: 1.5 }}
       />
 
-      <div className="container mx-auto relative z-10 px-4 sm:px-6 lg:px-8 py-12 md:py-24">
-        <div className="flex flex-col items-center justify-center text-center cursor-default">
+      <Container
+        maxWidth="lg"
+        sx={{
+          position: "relative",
+          zIndex: 10,
+          py: theme.custom.sectionSpacing.mobile,
+          [theme.breakpoints.up("md")]: {
+            py: theme.custom.sectionSpacing.desktop,
+          },
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            cursor: "default",
+          }}
+        >
           <motion.div
-            className="flex items-center gap-2 text-primary mb-4"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: theme.spacing(1),
+              marginBottom: theme.spacing(2),
+            }}
             custom={1}
             initial="hidden"
             animate="visible"
             variants={textVariants}
           >
             <Rocket size={20} className="animate-pulse" />
-            <span className="text-lg md:text-xl font-medium">
+            <Typography
+              variant="h6"
+              component="span"
+              sx={{
+                color: "primary.main",
+                fontWeight: 500,
+              }}
+            >
               MVP Specialist
-            </span>
+            </Typography>
             <Rocket size={20} className="animate-pulse" />
           </motion.div>
 
-          <motion.h1
-            className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/90 to-primary/70"
+          <motion.div
             custom={2}
             initial="hidden"
             animate="visible"
             variants={textVariants}
           >
-            {bio.name}
-          </motion.h1>
+            <Typography
+              variant="h1"
+              component="h1"
+              sx={{
+                background: theme.custom.gradients.primary,
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+                color: "transparent",
+                WebkitTextFillColor: "transparent",
+                mb: 3,
+              }}
+            >
+              {bio.name}
+            </Typography>
+          </motion.div>
 
           <motion.div
-            className="overflow-hidden mb-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.4 }}
+            style={{ overflow: "hidden", marginBottom: theme.spacing(4) }}
           >
-            <motion.h2
-              className="text-2xl md:text-4xl lg:text-5xl font-bold"
+            <motion.div
               initial={{ y: 40 }}
               animate={{ y: 0 }}
               transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
             >
-              <span className="text-primary">Full Stack Developer</span>
-            </motion.h2>
+              <Typography
+                variant="h2"
+                component="h2"
+                sx={{
+                  color: "primary.main",
+                  background: "none", // Override the h2 gradient from theme
+                  backgroundClip: "unset",
+                  WebkitBackgroundClip: "unset",
+                  WebkitTextFillColor: "unset",
+                  textAlign: "center",
+                }}
+              >
+                Full Stack Developer
+              </Typography>
+            </motion.div>
           </motion.div>
 
-          <motion.p
-            className="text-lg md:text-xl lg:text-2xl mb-10 max-w-xl leading-relaxed mx-auto font-medium"
+          <motion.div
             custom={3}
             initial="hidden"
             animate="visible"
             variants={textVariants}
           >
-            Crafting elegant MVPs that turn ideas into reality, fast.
-          </motion.p>
+            <Typography
+              variant="h5"
+              component="p"
+              sx={{
+                mb: theme.spacing(5),
+                maxWidth: "600px",
+                mx: "auto",
+                color: "text.primary",
+              }}
+            >
+              Crafting elegant MVPs that turn ideas into reality, fast.
+            </Typography>
+          </motion.div>
 
           <motion.div
-            className="flex flex-wrap gap-6 justify-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
           >
-            <motion.div
-              variants={buttonVariants}
-              initial="initial"
-              whileHover="hover"
-              whileTap="tap"
-              onHoverStart={() => setHoveredButton("cv")}
-              onHoverEnd={() => setHoveredButton(null)}
-              className="interactive-element cursor-pointer"
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={3}
+              alignItems="center"
+              justifyContent="center"
             >
-              <Button
-                className="flex items-center gap-2 relative text-base"
-                size="lg"
-                asChild
+              <motion.div
+                variants={buttonVariants}
+                initial="initial"
+                whileHover="hover"
+                whileTap="tap"
+                onHoverStart={() => setHoveredButton("cv")}
+                onHoverEnd={() => setHoveredButton(null)}
+                className="interactive-element cursor-pointer"
               >
-                <a href={bio.resume} target="_blank" rel="noopener noreferrer">
-                  <motion.span
-                    initial={{ scale: 1 }}
-                    animate={{
-                      scale: hoveredButton === "cv" ? [1, 1.2, 1] : 1,
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <FileText size={20} />
-                  </motion.span>
-                  Download CV
-                </a>
-              </Button>
-            </motion.div>
-
-            <motion.div
-              variants={buttonVariants}
-              initial="initial"
-              whileHover="hover"
-              whileTap="tap"
-              onHoverStart={() => setHoveredButton("contact")}
-              onHoverEnd={() => setHoveredButton(null)}
-              className="interactive-element cursor-pointer"
-            >
-              <Button
-                variant="outline"
-                className="flex items-center gap-2 text-base"
-                size="lg"
-                asChild
-              >
-                <Link
-                  to="contact"
-                  smooth={true}
-                  duration={800}
-                  offset={-80}
-                  spy={true}
-                  isDynamic={true}
-                  ignoreCancelEvents={false}
+                <Button
+                  className="flex items-center gap-2 relative text-base"
+                  size="lg"
+                  asChild
                 >
-                  <motion.span
-                    initial={{ scale: 1 }}
-                    animate={{
-                      scale: hoveredButton === "contact" ? [1, 1.2, 1] : 1,
-                    }}
-                    transition={{ duration: 0.3 }}
+                  <a
+                    href={bio.resume}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    <Mail size={20} />
-                  </motion.span>
-                  Contact Me
-                </Link>
-              </Button>
-            </motion.div>
+                    <motion.span
+                      initial={{ scale: 1 }}
+                      animate={{
+                        scale: hoveredButton === "cv" ? [1, 1.2, 1] : 1,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <FileText size={20} />
+                    </motion.span>
+                    Download CV
+                  </a>
+                </Button>
+              </motion.div>
+
+              <motion.div
+                variants={buttonVariants}
+                initial="initial"
+                whileHover="hover"
+                whileTap="tap"
+                onHoverStart={() => setHoveredButton("contact")}
+                onHoverEnd={() => setHoveredButton(null)}
+                className="interactive-element cursor-pointer"
+              >
+                <Button
+                  variant="outline"
+                  className="flex items-center gap-2 text-base"
+                  size="lg"
+                  asChild
+                >
+                  <Link
+                    to="contact"
+                    smooth={true}
+                    duration={800}
+                    offset={-80}
+                    spy={true}
+                    isDynamic={true}
+                    ignoreCancelEvents={false}
+                  >
+                    <motion.span
+                      initial={{ scale: 1 }}
+                      animate={{
+                        scale: hoveredButton === "contact" ? [1, 1.2, 1] : 1,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Mail size={20} />
+                    </motion.span>
+                    Contact Me
+                  </Link>
+                </Button>
+              </motion.div>
+            </Stack>
           </motion.div>
-        </div>
-      </div>
+        </Box>
+      </Container>
 
       {/* Scroll indicator with subtle animation */}
       <motion.div
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+        style={{
+          position: "absolute",
+          bottom: theme.spacing(5),
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 10,
+        }}
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.2, duration: 0.5 }}
@@ -239,19 +338,26 @@ const HeroSection = () => {
             spy={true}
             isDynamic={true}
             ignoreCancelEvents={false}
-            className="cursor-pointer group interactive-element"
+            style={{ cursor: "pointer" }}
           >
-            <motion.div
-              className="p-3 rounded-full bg-primary/20 group-hover:bg-primary/30 transition-colors duration-300"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <ArrowDown size={28} className="text-primary" />
+            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+              <Fab
+                color="primary"
+                size="small"
+                sx={{
+                  boxShadow: theme.custom.shadows.button,
+                  "&:hover": {
+                    boxShadow: theme.custom.shadows.cardHover,
+                  },
+                }}
+              >
+                <ArrowDown size={24} />
+              </Fab>
             </motion.div>
           </Link>
         </motion.div>
       </motion.div>
-    </section>
+    </Box>
   );
 };
 

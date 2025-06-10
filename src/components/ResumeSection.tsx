@@ -2,18 +2,63 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useData } from "../contexts/DataContext";
 import { FileText, Calendar, Briefcase, Book } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
+  Box,
+  Container,
+  Typography,
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+  Button,
+  Tabs,
+  Tab,
+  TabPanel,
+  List,
+  ListItem,
+  ListItemText,
+  Chip,
+  Stack,
+  Divider,
+  useTheme,
+} from "@mui/material";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function CustomTabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+  const theme = useTheme();
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`resume-tabpanel-${index}`}
+      aria-labelledby={`resume-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ pt: theme.spacing(3) }}>{children}</Box>}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `resume-tab-${index}`,
+    "aria-controls": `resume-tabpanel-${index}`,
+  };
+}
 
 const ResumeSection = () => {
+  const theme = useTheme();
   const { bio, experience, education } = useData();
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -24,39 +69,103 @@ const ResumeSection = () => {
   };
 
   return (
-    <section id="resume">
-      <div className="container mx-auto">
-        <h2 className="section-title">Resume</h2>
+    <Box
+      component="section"
+      id="resume"
+      sx={{
+        py: {
+          xs: theme.custom.sectionSpacing.mobile,
+          md: theme.custom.sectionSpacing.desktop,
+        },
+      }}
+    >
+      <Container maxWidth="lg">
+        <Typography
+          variant="h2"
+          component="h2"
+          sx={{
+            textAlign: "center",
+            mb: 2,
+          }}
+        >
+          Resume
+        </Typography>
 
-        <div className="flex flex-col items-center mb-12">
-          <Button size="lg" className="flex items-center gap-2" asChild>
-            <a
-              href="/krishnaMahato.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              download={`resume.pdf`}
-            >
-              <FileText size={18} />
-              Download Full Resume
-            </a>
+        <Box
+          sx={{
+            height: 4,
+            width: 80,
+            bgcolor: "primary.main",
+            mx: "auto",
+            borderRadius: theme.custom.borderRadius.small,
+            mb: theme.spacing(6),
+          }}
+        />
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            mb: theme.spacing(6),
+          }}
+        >
+          <Button
+            variant="contained"
+            size="large"
+            startIcon={<FileText size={18} />}
+            href="/krishnaMahato.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            download="resume.pdf"
+            sx={{
+              borderRadius: theme.custom.borderRadius.medium,
+              px: theme.spacing(3),
+              py: theme.spacing(1.5),
+            }}
+          >
+            Download Full Resume
           </Button>
-        </div>
+        </Box>
 
-        <Tabs defaultValue="experience" className="w-full max-w-4xl mx-auto">
-          <TabsList className="grid w-full grid-cols-2 mb-8">
-            <TabsTrigger value="experience" className="flex items-center gap-2">
-              <Briefcase size={16} />
-              Experience
-            </TabsTrigger>
-            <TabsTrigger value="education" className="flex items-center gap-2">
-              <Book size={16} />
-              Education
-            </TabsTrigger>
-          </TabsList>
+        <Box sx={{ maxWidth: 1024, mx: "auto" }}>
+          <Box
+            sx={{
+              borderBottom: 1,
+              borderColor: "divider",
+              mb: theme.spacing(3),
+            }}
+          >
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="resume tabs"
+              centered
+              sx={{
+                "& .MuiTab-root": {
+                  textTransform: "none",
+                  minHeight: 48,
+                },
+              }}
+            >
+              <Tab
+                icon={<Briefcase size={20} />}
+                iconPosition="start"
+                label="Experience"
+                {...a11yProps(0)}
+              />
+              <Tab
+                icon={<Book size={20} />}
+                iconPosition="start"
+                label="Education"
+                {...a11yProps(1)}
+              />
+            </Tabs>
+          </Box>
 
           {/* Experience Tab */}
-          <TabsContent value="experience">
-            <div className="space-y-6">
+          <CustomTabPanel value={value} index={0}>
+            <Stack spacing={theme.spacing(3)}>
               {experience.map((exp, index) => (
                 <motion.div
                   key={`${exp.company}-${index}`}
@@ -65,43 +174,85 @@ const ResumeSection = () => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <Card>
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <CardTitle>{exp.title}</CardTitle>
-                          <CardDescription className="text-primary font-medium mt-1">
+                  <Card elevation={2}>
+                    <CardContent sx={{ p: theme.custom.cardSpacing.padding }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "flex-start",
+                          mb: theme.spacing(2),
+                        }}
+                      >
+                        <Box>
+                          <Typography
+                            variant="h4"
+                            component="h3"
+                            sx={{ mb: 0.5 }}
+                          >
+                            {exp.title}
+                          </Typography>
+                          <Typography
+                            variant="subtitle1"
+                            sx={{ color: "primary.main", fontWeight: 500 }}
+                          >
                             {exp.company}
-                          </CardDescription>
-                        </div>
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Calendar size={14} className="mr-1" />
-                          {formatDate(exp.startDate)} -{" "}
-                          {exp.endDate === "Present"
-                            ? exp.endDate
-                            : formatDate(exp.endDate)}
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="mb-3">{exp.description}</p>
-                      <ul className="list-disc pl-5 space-y-1">
+                          </Typography>
+                        </Box>
+                        <Chip
+                          icon={<Calendar size={14} />}
+                          label={`${formatDate(exp.startDate)} - ${
+                            exp.endDate === "Present"
+                              ? exp.endDate
+                              : formatDate(exp.endDate)
+                          }`}
+                          variant="outlined"
+                          size="small"
+                          sx={{ minWidth: "max-content" }}
+                        />
+                      </Box>
+
+                      <Typography variant="body1" sx={{ mb: theme.spacing(2) }}>
+                        {exp.description}
+                      </Typography>
+
+                      <List dense sx={{ mt: 1 }}>
                         {exp.responsibilities.map((item, i) => (
-                          <li key={i} className="text-sm text-muted-foreground">
-                            {item}
-                          </li>
+                          <ListItem
+                            key={i}
+                            sx={{
+                              py: 0.5,
+                              px: 0,
+                              "&::before": {
+                                content: '"•"',
+                                color: "primary.main",
+                                fontWeight: "bold",
+                                width: "1em",
+                                marginRight: "0.5em",
+                              },
+                            }}
+                          >
+                            <ListItemText
+                              primary={item}
+                              primaryTypographyProps={{
+                                variant: "body2",
+                                color: "text.secondary",
+                              }}
+                              sx={{ m: 0 }}
+                            />
+                          </ListItem>
                         ))}
-                      </ul>
+                      </List>
                     </CardContent>
                   </Card>
                 </motion.div>
               ))}
-            </div>
-          </TabsContent>
+            </Stack>
+          </CustomTabPanel>
 
           {/* Education Tab */}
-          <TabsContent value="education">
-            <div className="space-y-6">
+          <CustomTabPanel value={value} index={1}>
+            <Stack spacing={theme.spacing(3)}>
               {education.map((edu, index) => (
                 <motion.div
                   key={`${edu.institution}-${index}`}
@@ -110,38 +261,63 @@ const ResumeSection = () => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <Card>
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <CardTitle>{edu.degree}</CardTitle>
-                          <CardDescription className="text-primary font-medium mt-1">
+                  <Card elevation={2}>
+                    <CardContent sx={{ p: theme.custom.cardSpacing.padding }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "flex-start",
+                          mb: theme.spacing(2),
+                        }}
+                      >
+                        <Box>
+                          <Typography
+                            variant="h4"
+                            component="h3"
+                            sx={{ mb: 0.5 }}
+                          >
+                            {edu.degree}
+                          </Typography>
+                          <Typography
+                            variant="subtitle1"
+                            sx={{ color: "primary.main", fontWeight: 500 }}
+                          >
                             {edu.institution}
-                          </CardDescription>
-                        </div>
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Calendar size={14} className="mr-1" />
-                          {formatDate(edu.startDate)} -{" "}
-                          {formatDate(edu.endDate)}
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm">{edu.field}</p>
+                          </Typography>
+                        </Box>
+                        <Chip
+                          icon={<Calendar size={14} />}
+                          label={`${formatDate(edu.startDate)} - ${formatDate(
+                            edu.endDate
+                          )}`}
+                          variant="outlined"
+                          size="small"
+                          sx={{ minWidth: "max-content" }}
+                        />
+                      </Box>
+
+                      <Typography variant="body1" sx={{ mb: 1 }}>
+                        {edu.field}
+                      </Typography>
+
                       {edu.description && (
-                        <p className="mt-2 text-sm text-muted-foreground">
-                          {edu.description}
-                        </p>
+                        <>
+                          <Divider sx={{ my: 1 }} />
+                          <Typography variant="body2" color="text.secondary">
+                            {edu.description}
+                          </Typography>
+                        </>
                       )}
                     </CardContent>
                   </Card>
                 </motion.div>
               ))}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </section>
+            </Stack>
+          </CustomTabPanel>
+        </Box>
+      </Container>
+    </Box>
   );
 };
 

@@ -1,13 +1,25 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useData } from '../contexts/DataContext';
 import { ExternalLink, Github } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Box,
+  Container,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  CardActions,
+  CardMedia,
+  Chip,
+  Button,
+  Stack,
+  ButtonGroup,
+  useTheme
+} from '@mui/material';
 
 const ProjectsSection = () => {
+  const theme = useTheme();
   const { projects } = useData();
   const [filter, setFilter] = useState<string | null>(null);
   
@@ -22,104 +34,164 @@ const ProjectsSection = () => {
     : projects;
 
   return (
-    <section id="projects">
-      <div className="container mx-auto">
-        <h2 className="section-title">My Projects</h2>
+    <Box 
+      component="section" 
+      id="projects" 
+      sx={{ 
+        py: {
+          xs: theme.custom.sectionSpacing.mobile,
+          md: theme.custom.sectionSpacing.desktop
+        }
+      }}
+    >
+      <Container maxWidth="lg">
+        <Typography
+          variant="h2"
+          component="h2"
+          sx={{
+            textAlign: 'center',
+            mb: 2,
+          }}
+        >
+          My Projects
+        </Typography>
+        
+        <Box 
+          sx={{ 
+            height: 4, 
+            width: 80, 
+            bgcolor: 'primary.main', 
+            mx: 'auto', 
+            borderRadius: theme.custom.borderRadius.small,
+            mb: theme.spacing(5)
+          }} 
+        />
         
         {/* Filter buttons */}
-        <div className="flex justify-center flex-wrap gap-2 mb-10">
-          <Button
-            variant={filter === null ? "default" : "outline"}
-            onClick={() => setFilter(null)}
-          >
-            All
-          </Button>
-          
-          {allTags.map(tag => (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: theme.spacing(5) }}>
+          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
             <Button
-              key={tag}
-              variant={filter === tag ? "default" : "outline"}
-              onClick={() => setFilter(tag)}
+              variant={filter === null ? "contained" : "outlined"}
+              onClick={() => setFilter(null)}
+              size="small"
             >
-              {tag}
+              All
             </Button>
-          ))}
-        </div>
+            
+            {allTags.map(tag => (
+              <Button
+                key={tag}
+                variant={filter === tag ? "contained" : "outlined"}
+                onClick={() => setFilter(tag)}
+                size="small"
+              >
+                {tag}
+              </Button>
+            ))}
+          </Stack>
+        </Box>
         
         {/* Projects grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Grid container spacing={theme.custom.cardSpacing.margin}>
           {filteredProjects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
-            >
-              <Card className="h-full flex flex-col project-card">
-                <div className="overflow-hidden h-48">
-                  <img
-                    src={project.image}
+            <Grid item xs={12} md={6} lg={4} key={project.id}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                style={{ height: '100%' }}
+              >
+                <Card 
+                  sx={{ 
+                    height: '100%', 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    height={200}
+                    image={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-110"
+                    sx={{
+                      objectFit: 'cover',
+                      transition: `transform ${theme.custom.transitions.normal} ease`,
+                      '&:hover': {
+                        transform: 'scale(1.05)'
+                      }
+                    }}
                   />
-                </div>
-                
-                <CardHeader>
-                  <CardTitle>{project.title}</CardTitle>
-                  <CardDescription>
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {project.tags.slice(0, 3).map(tag => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                      {project.tags.length > 3 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{project.tags.length - 3}
-                        </Badge>
-                      )}
-                    </div>
-                  </CardDescription>
-                </CardHeader>
-                
-                <CardContent className="flex-grow">
-                  <p className="text-sm text-muted-foreground">
-                    {project.description}
-                  </p>
-                </CardContent>
-                
-                <CardFooter className="flex justify-between">
-                  <Button variant="outline" size="sm" asChild>
-                    <a
+                  
+                  <CardContent sx={{ flexGrow: 1, pb: 1, p: theme.custom.cardSpacing.padding }}>
+                    <Typography 
+                      variant="h4" 
+                      component="h3" 
+                      gutterBottom
+                    >
+                      {project.title}
+                    </Typography>
+                    
+                    <Box sx={{ mb: theme.spacing(2) }}>
+                      <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
+                        {project.tags.slice(0, 3).map(tag => (
+                          <Chip
+                            key={tag}
+                            label={tag}
+                            size="small"
+                            variant="outlined"
+                          />
+                        ))}
+                        {project.tags.length > 3 && (
+                          <Chip
+                            label={`+${project.tags.length - 3}`}
+                            size="small"
+                            variant="outlined"
+                          />
+                        )}
+                      </Stack>
+                    </Box>
+                    
+                    <Typography 
+                      variant="body2" 
+                      color="text.secondary"
+                    >
+                      {project.description}
+                    </Typography>
+                  </CardContent>
+                  
+                  <CardActions sx={{ justifyContent: 'space-between', p: theme.custom.cardSpacing.padding }}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      startIcon={<Github size={16} />}
                       href={project.sourceUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2"
+                      sx={{ minWidth: 80 }}
                     >
-                      <Github size={16} />
                       Code
-                    </a>
-                  </Button>
-                  
-                  <Button size="sm" asChild>
-                    <a
+                    </Button>
+                    
+                    <Button
+                      variant="contained"
+                      size="small"
+                      startIcon={<ExternalLink size={16} />}
                       href={project.demoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2"
+                      sx={{ minWidth: 80 }}
                     >
-                      <ExternalLink size={16} />
                       Demo
-                    </a>
-                  </Button>
-                </CardFooter>
-              </Card>
-            </motion.div>
+                    </Button>
+                  </CardActions>
+                </Card>
+              </motion.div>
+            </Grid>
           ))}
-        </div>
-      </div>
-    </section>
+        </Grid>
+      </Container>
+    </Box>
   );
 };
 
