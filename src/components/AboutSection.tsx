@@ -1,7 +1,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useData } from "../contexts/DataContext";
-import { MapPin, Mail, User, Terminal, Code } from "lucide-react";
+import {
+  LocationOn as MapPinIcon,
+  Email as MailIcon,
+  Person as UserIcon,
+  Terminal as TerminalIcon,
+  Code as CodeIcon,
+} from "@mui/icons-material";
 import {
   Box,
   Container,
@@ -56,7 +62,7 @@ const AboutSection = () => {
           display: { xs: "none", md: "block" },
         }}
       >
-        <Terminal size={120} strokeWidth={1} />
+        <TerminalIcon sx={{ fontSize: 120, opacity: 0.1 }} />
       </Box>
       <Box
         sx={{
@@ -67,7 +73,7 @@ const AboutSection = () => {
           display: { xs: "none", md: "block" },
         }}
       >
-        <Code size={120} strokeWidth={1} />
+        <CodeIcon sx={{ fontSize: 120, opacity: 0.1 }} />
       </Box>
 
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 10 }}>
@@ -193,11 +199,11 @@ const AboutSection = () => {
                 {/* Contact Info */}
                 <Stack spacing={1.5} sx={{ mb: 3 }}>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <MapPin size={18} color="var(--mui-palette-primary-main)" />
+                    <MapPinIcon sx={{ fontSize: 18, color: "primary.main" }} />
                     <Typography variant="body2">{bio.location}</Typography>
                   </Box>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Mail size={18} color="var(--mui-palette-primary-main)" />
+                    <MailIcon sx={{ fontSize: 18, color: "primary.main" }} />
                     <Typography variant="body2">{bio.email}</Typography>
                   </Box>
                   {bio.socialLinks.map((link) => (
@@ -205,7 +211,7 @@ const AboutSection = () => {
                       key={link.name}
                       sx={{ display: "flex", alignItems: "center", gap: 1 }}
                     >
-                      <User size={18} color="var(--mui-palette-primary-main)" />
+                      <UserIcon sx={{ fontSize: 18, color: "primary.main" }} />
                       <Link
                         href={link.url}
                         target="_blank"

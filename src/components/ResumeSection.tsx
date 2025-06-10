@@ -1,7 +1,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useData } from "../contexts/DataContext";
-import { FileText, Calendar, Briefcase, Book } from "lucide-react";
+import {
+  Description as FileTextIcon,
+  CalendarToday as CalendarIcon,
+  Work as BriefcaseIcon,
+  School as BookIcon,
+} from "@mui/icons-material";
 import {
   Box,
   Container,
@@ -11,7 +16,6 @@ import {
   Button,
   Tabs,
   Tab,
-  TabPanel,
   List,
   ListItem,
   ListItemText,
@@ -53,7 +57,7 @@ function a11yProps(index: number) {
 
 const ResumeSection = () => {
   const theme = useTheme();
-  const { bio, experience, education } = useData();
+  const { experience, education } = useData();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -113,7 +117,7 @@ const ResumeSection = () => {
           <Button
             variant="contained"
             size="large"
-            startIcon={<FileText size={18} />}
+            startIcon={<FileTextIcon style={{ fontSize: 18 }} />}
             href="/krishnaMahato.pdf"
             target="_blank"
             rel="noopener noreferrer"
@@ -149,13 +153,13 @@ const ResumeSection = () => {
               }}
             >
               <Tab
-                icon={<Briefcase size={20} />}
+                icon={<BriefcaseIcon style={{ fontSize: 20 }} />}
                 iconPosition="start"
                 label="Experience"
                 {...a11yProps(0)}
               />
               <Tab
-                icon={<Book size={20} />}
+                icon={<BookIcon style={{ fontSize: 20 }} />}
                 iconPosition="start"
                 label="Education"
                 {...a11yProps(1)}
@@ -200,7 +204,7 @@ const ResumeSection = () => {
                           </Typography>
                         </Box>
                         <Chip
-                          icon={<Calendar size={14} />}
+                          icon={<CalendarIcon sx={{ fontSize: 14 }} />}
                           label={`${formatDate(exp.startDate)} - ${
                             exp.endDate === "Present"
                               ? exp.endDate
@@ -287,7 +291,7 @@ const ResumeSection = () => {
                           </Typography>
                         </Box>
                         <Chip
-                          icon={<Calendar size={14} />}
+                          icon={<CalendarIcon sx={{ fontSize: 14 }} />}
                           label={`${formatDate(edu.startDate)} - ${formatDate(
                             edu.endDate
                           )}`}

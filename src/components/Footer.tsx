@@ -1,7 +1,7 @@
 import React from "react";
 import { useData } from "../contexts/DataContext";
 import { Link } from "react-scroll";
-import { ArrowUp } from "lucide-react";
+import { KeyboardArrowUp as ArrowUpIcon } from "@mui/icons-material";
 import {
   Box,
   Container,
@@ -61,7 +61,7 @@ const Footer = () => {
                   transition: `transform ${theme.custom.transitions.normal} ease`,
                 }}
               >
-                <ArrowUp size={20} />
+                <ArrowUpIcon />
               </Fab>
             </Link>
           </Box>

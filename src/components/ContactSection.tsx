@@ -4,7 +4,13 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useData } from "../contexts/DataContext";
-import { Mail, MapPin, Send, Loader2, ExternalLink } from "lucide-react";
+import {
+  Email as MailIcon,
+  LocationOn as MapPinIcon,
+  Send as SendIcon,
+  OpenInNew as ExternalLinkIcon,
+} from "@mui/icons-material";
+import { CircularProgress as Loader2Icon } from "@mui/material";
 import {
   Box,
   Container,
@@ -427,14 +433,14 @@ const ContactSection = () => {
 
                 <Stack spacing={{ xs: 2.5, sm: 3 }} sx={{ flex: 1 }}>
                   <ContactInfoItem
-                    icon={<Mail size={20} />}
+                    icon={<MailIcon />}
                     title="Email"
                     content={bio.email}
                     href={`mailto:${bio.email}`}
                   />
 
                   <ContactInfoItem
-                    icon={<MapPin size={20} />}
+                    icon={<MapPinIcon />}
                     title="Location"
                     content={bio.location}
                   />
@@ -477,7 +483,10 @@ const ContactSection = () => {
                         action={
                           <Button size="sm" variant="outline" asChild>
                             <a href={generateMailtoLink()}>
-                              <ExternalLink size={16} className="mr-2" />
+                              <ExternalLinkIcon
+                                className="mr-2"
+                                style={{ fontSize: 16 }}
+                              />
                               Open Email Client
                             </a>
                           </Button>
@@ -580,9 +589,9 @@ const ContactSection = () => {
                       loadingPosition="start"
                       startIcon={
                         isSubmitting ? (
-                          <Loader2 size={18} />
+                          <Loader2Icon style={{ fontSize: 18 }} />
                         ) : (
-                          <Send size={18} />
+                          <SendIcon style={{ fontSize: 18 }} />
                         )
                       }
                       sx={{

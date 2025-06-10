@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-scroll";
 import { motion } from "framer-motion";
-import { Menu, X, Moon, Sun } from "lucide-react";
+import {
+  Menu as MenuIcon,
+  Close as CloseIcon,
+  DarkMode as MoonIcon,
+  LightMode as SunIcon,
+} from "@mui/icons-material";
 import {
   AppBar,
   Toolbar,
@@ -143,18 +148,26 @@ const Navbar = () => {
             onClick={toggleTheme}
             sx={{
               ml: 1,
+              padding: "8px 16px",
+              borderRadius: "8px",
+              minWidth: 48,
+              height: 40,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               color: muiTheme.palette.text.primary,
               "&:hover": {
                 backgroundColor: muiTheme.palette.action.hover,
                 color: muiTheme.palette.primary.main,
               },
+              transition: "all 0.3s ease",
               cursor: "pointer",
             }}
             aria-label={`Switch to ${
               theme === "light" ? "dark" : "light"
             } mode`}
           >
-            {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+            {theme === "light" ? <MoonIcon /> : <SunIcon />}
           </IconButton>
         </Box>
 
@@ -167,6 +180,11 @@ const Navbar = () => {
             } mode`}
             sx={{
               mr: 1,
+              width: 40,
+              height: 40,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               color: muiTheme.palette.text.primary,
               "&:hover": {
                 backgroundColor: muiTheme.palette.action.hover,
@@ -175,13 +193,18 @@ const Navbar = () => {
               cursor: "pointer",
             }}
           >
-            {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+            {theme === "light" ? <MoonIcon /> : <SunIcon />}
           </IconButton>
 
           <IconButton
             onClick={toggleMenu}
             aria-label="Toggle menu"
             sx={{
+              width: 40,
+              height: 40,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               color: muiTheme.palette.text.primary,
               "&:hover": {
                 backgroundColor: muiTheme.palette.action.hover,
@@ -190,7 +213,7 @@ const Navbar = () => {
               cursor: "pointer",
             }}
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+            {isOpen ? <CloseIcon /> : <MenuIcon />}
           </IconButton>
         </Box>
 
@@ -247,15 +270,7 @@ const Navbar = () => {
                       cursor: "pointer",
                     }}
                   >
-                    <ListItemText
-                      primary={link.title}
-                      primaryTypographyProps={{
-                        variant: "h6",
-                        fontWeight: 500,
-                        color: muiTheme.palette.text.primary,
-                        sx: { cursor: "pointer" },
-                      }}
-                    />
+                    <ListItemText primary={link.title} />
                   </Link>
                 </ListItemButton>
               </ListItem>

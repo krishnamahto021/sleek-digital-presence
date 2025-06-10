@@ -1,6 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowDown, FileText, Mail, Rocket } from "lucide-react";
+import {
+  KeyboardArrowDown as ArrowDownIcon,
+  Description as FileTextIcon,
+  Email as MailIcon,
+  Rocket as RocketIcon,
+} from "@mui/icons-material";
 import { Link } from "react-scroll";
 import { useData } from "../contexts/DataContext";
 import {
@@ -143,7 +148,7 @@ const HeroSection = () => {
             animate="visible"
             variants={textVariants}
           >
-            <Rocket size={20} className="animate-pulse" />
+            <RocketIcon className="animate-pulse" />
             <Typography
               variant="h6"
               component="span"
@@ -154,7 +159,7 @@ const HeroSection = () => {
             >
               MVP Specialist
             </Typography>
-            <Rocket size={20} className="animate-pulse" />
+            <RocketIcon className="animate-pulse" />
           </motion.div>
 
           <motion.div
@@ -264,7 +269,7 @@ const HeroSection = () => {
                       }}
                       transition={{ duration: 0.3 }}
                     >
-                      <FileText size={20} />
+                      <FileTextIcon />
                     </motion.span>
                     Download CV
                   </a>
@@ -302,7 +307,7 @@ const HeroSection = () => {
                       }}
                       transition={{ duration: 0.3 }}
                     >
-                      <Mail size={20} />
+                      <MailIcon />
                     </motion.span>
                     Contact Me
                   </Link>
@@ -351,7 +356,7 @@ const HeroSection = () => {
                   },
                 }}
               >
-                <ArrowDown size={24} />
+                <ArrowDownIcon />
               </Fab>
             </motion.div>
           </Link>
