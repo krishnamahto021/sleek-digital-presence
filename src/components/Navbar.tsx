@@ -56,9 +56,16 @@ const Navbar = () => {
         borderBottom: trigger
           ? `1px solid ${muiTheme.palette.divider}`
           : "none",
+        // Full width, no margins, no border radius
+        width: "100%",
+        left: 0,
+        right: 0,
+        top: 0,
       }}
     >
-      <Toolbar sx={{ justifyContent: "space-between" }}>
+      <Toolbar
+        sx={{ justifyContent: "space-between", px: { xs: 2, sm: 3, md: 4 } }}
+      >
         {/* Logo/Name */}
         <Link
           to="hero"
@@ -77,6 +84,7 @@ const Navbar = () => {
               color: muiTheme.palette.text.primary,
               "&:hover": { color: muiTheme.palette.primary.main },
               transition: "color 0.3s ease",
+              cursor: "pointer",
             }}
           >
             {bio.name.split(" ")[0]}
@@ -102,7 +110,7 @@ const Navbar = () => {
               smooth={true}
               offset={-80}
               duration={800}
-              className="nav-link cursor-pointer"
+              className="nav-link"
               activeClass="active"
               isDynamic={true}
               ignoreCancelEvents={false}
@@ -123,6 +131,7 @@ const Navbar = () => {
                     color: muiTheme.palette.primary.main,
                   },
                   transition: "color 0.3s ease",
+                  cursor: "pointer",
                 }}
               >
                 {link.title}
@@ -139,6 +148,7 @@ const Navbar = () => {
                 backgroundColor: muiTheme.palette.action.hover,
                 color: muiTheme.palette.primary.main,
               },
+              cursor: "pointer",
             }}
             aria-label={`Switch to ${
               theme === "light" ? "dark" : "light"
@@ -162,6 +172,7 @@ const Navbar = () => {
                 backgroundColor: muiTheme.palette.action.hover,
                 color: muiTheme.palette.primary.main,
               },
+              cursor: "pointer",
             }}
           >
             {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
@@ -176,6 +187,7 @@ const Navbar = () => {
                 backgroundColor: muiTheme.palette.action.hover,
                 color: muiTheme.palette.primary.main,
               },
+              cursor: "pointer",
             }}
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -192,25 +204,32 @@ const Navbar = () => {
             "& .MuiDrawer-paper": {
               backgroundColor: muiTheme.palette.background.paper,
               backdropFilter: "blur(10px)",
-              mt: 8, // Account for AppBar height
               borderBottom: `1px solid ${muiTheme.palette.divider}`,
+              // Full width mobile menu, no margins, no border radius, no top gap
+              left: "0 !important",
+              right: "0 !important",
+              width: "100% !important",
+              top: { xs: "56px !important", sm: "64px !important" }, // Tight positioning under navbar
+              borderRadius: "0 !important",
+              marginTop: "0 !important",
             },
           }}
         >
-          <List>
+          <List sx={{ px: { xs: 2, sm: 3 } }}>
             {navLinks.map((link) => (
               <ListItem key={link.to} disablePadding>
                 <ListItemButton
                   onClick={closeMenu}
                   sx={{
                     py: 2,
-                    px: 4,
+                    px: { xs: 2, sm: 3 },
                     "&:hover": {
                       backgroundColor: muiTheme.palette.action.hover,
                       "& .MuiListItemText-primary": {
                         color: muiTheme.palette.primary.main,
                       },
                     },
+                    cursor: "pointer",
                   }}
                 >
                   <Link
@@ -222,7 +241,11 @@ const Navbar = () => {
                     activeClass="text-primary"
                     isDynamic={true}
                     ignoreCancelEvents={false}
-                    style={{ width: "100%", textDecoration: "none" }}
+                    style={{
+                      width: "100%",
+                      textDecoration: "none",
+                      cursor: "pointer",
+                    }}
                   >
                     <ListItemText
                       primary={link.title}
@@ -230,6 +253,7 @@ const Navbar = () => {
                         variant: "h6",
                         fontWeight: 500,
                         color: muiTheme.palette.text.primary,
+                        sx: { cursor: "pointer" },
                       }}
                     />
                   </Link>
