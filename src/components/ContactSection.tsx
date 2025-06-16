@@ -20,11 +20,11 @@ import {
   Alert,
   Stack,
   Avatar,
+  Button,
   useTheme,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { ContactFormData } from "../types";
 import apiClient from "../lib/axios";
 
@@ -195,7 +195,6 @@ const FormInput = ({
 const ContactSection = () => {
   const theme = useTheme();
   const { bio } = useData();
-  const { toast } = useToast();
 
   const [status, setStatus] = useState<
     "idle" | "loading" | "succeeded" | "failed"
@@ -218,8 +217,7 @@ const ContactSection = () => {
   useEffect(() => {
     if (status === "succeeded") {
       resetForm();
-      toast({
-        title: "Message sent!",
+      toast.success("Message sent!", {
         description:
           successMessage ||
           "Thank you for your message. I'll get back to you soon.",
@@ -239,11 +237,9 @@ const ContactSection = () => {
   // Show error toast when submission fails
   useEffect(() => {
     if (status === "failed" && error) {
-      toast({
-        title: "Server Error",
+      toast.error("Server Error", {
         description:
           "The contact form is temporarily unavailable. Please try the email fallback below.",
-        variant: "destructive",
       });
 
       const timer = setTimeout(() => {
@@ -481,14 +477,15 @@ const ContactSection = () => {
                         severity="warning"
                         sx={{ mt: 2 }}
                         action={
-                          <Button size="sm" variant="outline" asChild>
-                            <a href={generateMailtoLink()}>
-                              <ExternalLinkIcon
-                                className="mr-2"
-                                style={{ fontSize: 16 }}
-                              />
-                              Open Email Client
-                            </a>
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            href={generateMailtoLink()}
+                            startIcon={
+                              <ExternalLinkIcon style={{ fontSize: 16 }} />
+                            }
+                          >
+                            Open Email Client
                           </Button>
                         }
                       >

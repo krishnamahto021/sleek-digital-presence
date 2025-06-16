@@ -12,7 +12,6 @@ import {
   Box,
   Container,
   Typography,
-  Grid,
   Paper,
   Chip,
   Stack,
@@ -20,7 +19,7 @@ import {
   Divider,
   Link,
 } from "@mui/material";
-import { FlickeringGrid } from "@/components/ui/flickering-grid";
+import FlickeringGrid from "./FlickeringGrid";
 
 const AboutSection = () => {
   const { bio, skills } = useData();
@@ -44,7 +43,6 @@ const AboutSection = () => {
       {/* Enhanced GitHub-themed Grid Background */}
       <Box sx={{ position: "absolute", inset: 0, zIndex: 0 }}>
         <FlickeringGrid
-          useGithubTheme={true}
           maxOpacity={0.5}
           flickerChance={0.08}
           squareSize={6}
@@ -85,12 +83,8 @@ const AboutSection = () => {
               fontSize: { xs: "2rem", md: "2.5rem" },
               fontWeight: "bold",
               mb: 1,
-              background:
-                "linear-gradient(135deg, var(--mui-palette-primary-main) 0%, var(--mui-palette-primary-light) 50%, var(--mui-palette-primary-dark) 100%)",
-              backgroundClip: "text",
-              WebkitBackgroundClip: "text",
-              color: "transparent",
-              WebkitTextFillColor: "transparent",
+              color: "primary.main",
+              textShadow: "0 2px 4px rgba(0,0,0,0.1)",
             }}
           >
             About Me
@@ -106,9 +100,16 @@ const AboutSection = () => {
           />
         </Box>
 
-        <Grid container spacing={{ xs: 4, lg: 8 }} alignItems="center">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            gap: { xs: 4, lg: 8 },
+            alignItems: "center",
+          }}
+        >
           {/* Photo with enhanced styling */}
-          <Grid item xs={12} md={6}>
+          <Box sx={{ flex: { xs: "1", md: "1" }, width: "100%" }}>
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -153,10 +154,10 @@ const AboutSection = () => {
                 </Paper>
               </Box>
             </motion.div>
-          </Grid>
+          </Box>
 
           {/* Text Content with enhanced styling */}
-          <Grid item xs={12} md={6}>
+          <Box sx={{ flex: { xs: "1", md: "1" }, width: "100%" }}>
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -270,8 +271,8 @@ const AboutSection = () => {
                 </Box>
               </Paper>
             </motion.div>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Container>
     </Box>
   );

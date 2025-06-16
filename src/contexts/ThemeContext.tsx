@@ -45,12 +45,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         dark: theme === "dark" ? "#7c3aed" : "#6d28d9", // violet-600 : violet-700
       },
       background: {
-        default: theme === "dark" ? "#0f172a" : "#ffffff", // slate-900 : white
-        paper: theme === "dark" ? "#1e293b" : "#f8fafc", // slate-800 : slate-50
+        default: theme === "dark" ? "#0f1419" : "#ffffff", // Darker background for better contrast
+        paper: theme === "dark" ? "#1a202c" : "#f8fafc", // Darker paper background
       },
       text: {
-        primary: theme === "dark" ? "#f1f5f9" : "#0f172a", // slate-100 : slate-900
-        secondary: theme === "dark" ? "#cbd5e1" : "#475569", // slate-300 : slate-600
+        primary: theme === "dark" ? "#ffffff" : "#0f172a", // Pure white for better contrast : slate-900
+        secondary: theme === "dark" ? "#e2e8f0" : "#475569", // Lighter secondary text : slate-600
       },
       divider: theme === "dark" ? "#334155" : "#e2e8f0", // slate-700 : slate-200
     },
@@ -249,16 +249,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       // Typography Styling
       MuiTypography: {
         styleOverrides: {
-          // Section Title Variant
+          // Section Title Variant - only apply gradient to h2 with gradient class
           h2: {
-            background:
-              theme === "dark"
-                ? "linear-gradient(135deg, #60a5fa 0%, #93c5fd 50%, #2563eb 100%)"
-                : "linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #1d4ed8 100%)",
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
-            color: "transparent",
-            WebkitTextFillColor: "transparent",
             textAlign: "center",
             marginBottom: "0.5rem",
           },
