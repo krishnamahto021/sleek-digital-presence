@@ -1,11 +1,15 @@
 import React from "react";
 import { motion } from "framer-motion";
 import {
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  LinearProgress,
   Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  useTheme,
+} from "@mui/material";
 
 interface SkillsGridProps {
   skills: {
@@ -17,57 +21,86 @@ interface SkillsGridProps {
 }
 
 const SkillsGrid: React.FC<SkillsGridProps> = ({ skills }) => {
+  const theme = useTheme();
+
   return (
-    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4">
+    <Grid container spacing={2}>
       {skills.map((skill, index) => (
-        <TooltipProvider key={skill.name}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                viewport={{ once: true }}
-                className="skill-card backdrop-blur-sm p-4 rounded-lg border border-primary/10 hover:border-primary/30 transition-all hover:shadow-md hover:scale-105 group"
-                style={{
-                  background: "rgba(var(--card), 0.1)",
-                  backdropFilter: "blur(8px)",
+        <Grid item xs={12} sm={6} lg={4} key={skill.name}>
+          <Tooltip title={skill.description} placement="top" arrow>
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.05 }}
+              viewport={{ once: true }}
+            >
+              <Card
+                className="skill-card"
+                sx={{
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                    boxShadow: theme.shadows[4],
+                    "& .skill-name": {
+                      color: "primary.main",
+                    },
+                  },
                 }}
               >
-                <div className="text-center">
-                  <div className="mb-3 relative overflow-hidden rounded-full">
-                    <div
-                      className="w-full bg-muted/30 dark:bg-muted/20 h-2 rounded-full"
-                      aria-hidden="true"
+                <CardContent sx={{ textAlign: "center", p: 2 }}>
+                  <Box sx={{ mb: 2 }}>
+                    <LinearProgress
+                      variant="determinate"
+                      value={skill.level}
+                      sx={{
+                        height: 8,
+                        borderRadius: 1,
+                        backgroundColor: "rgba(0,0,0,0.1)",
+                        "& .MuiLinearProgress-bar": {
+                          background: `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                          borderRadius: 1,
+                        },
+                      }}
+                    />
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ display: "block", mt: 1 }}
                     >
-                      <motion.div
-                        className="bg-gradient-to-r from-primary/80 to-secondary h-full rounded-full relative"
-                        style={{ width: `${skill.level}%` }}
-                        whileHover={{
-                          boxShadow: "0 0 12px 2px rgba(var(--primary), 0.3)",
-                        }}
-                      />
-                    </div>
-                    <span className="text-xs text-muted-foreground mt-2 block">
                       {skill.level}%
-                    </span>
-                  </div>
-                  <h4 className="font-medium text-lg group-hover:text-primary transition-colors">
+                    </Typography>
+                  </Box>
+
+                  <Typography
+                    variant="h6"
+                    className="skill-name"
+                    sx={{
+                      fontWeight: 500,
+                      mb: 0.5,
+                      transition: "color 0.3s ease",
+                    }}
+                  >
                     {skill.name}
-                  </h4>
-                  <p className="text-xs text-muted-foreground capitalize mt-1">
+                  </Typography>
+
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{
+                      textTransform: "capitalize",
+                      fontSize: "0.75rem",
+                    }}
+                  >
                     {skill.category}
-                  </p>
-                </div>
-              </motion.div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p className="max-w-xs">{skill.description}</p>
-            </TooltipContent>
+                  </Typography>
+                </CardContent>
+              </Card>
+            </motion.div>
           </Tooltip>
-        </TooltipProvider>
+        </Grid>
       ))}
-    </div>
+    </Grid>
   );
 };
 

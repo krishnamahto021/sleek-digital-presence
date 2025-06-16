@@ -14,12 +14,11 @@ import {
   Typography,
   Fab,
   Stack,
+  Button,
   useTheme,
 } from "@mui/material";
 
 import WaveBackground from "./WaveBackground";
-
-import { Button } from "@/components/ui/button";
 import Shape3D from "./Shape3D";
 
 const HeroSection = () => {
@@ -109,7 +108,15 @@ const HeroSection = () => {
 
       {/* Background gradient overlay */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/40 to-background/70 z-1"
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            theme.palette.mode === "dark"
+              ? "linear-gradient(to bottom, rgba(15,20,25,0.85), rgba(15,20,25,0.6), rgba(15,20,25,0.85))"
+              : "linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.4), rgba(255,255,255,0.7))",
+          zIndex: 1,
+        }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
@@ -148,7 +155,11 @@ const HeroSection = () => {
             animate="visible"
             variants={textVariants}
           >
-            <RocketIcon className="animate-pulse" />
+            <RocketIcon
+              sx={{
+                animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+              }}
+            />
             <Typography
               variant="h6"
               component="span"
@@ -159,7 +170,11 @@ const HeroSection = () => {
             >
               MVP Specialist
             </Typography>
-            <RocketIcon className="animate-pulse" />
+            <RocketIcon
+              sx={{
+                animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+              }}
+            />
           </motion.div>
 
           <motion.div
@@ -250,18 +265,11 @@ const HeroSection = () => {
                 whileTap="tap"
                 onHoverStart={() => setHoveredButton("cv")}
                 onHoverEnd={() => setHoveredButton(null)}
-                className="interactive-element cursor-pointer"
               >
                 <Button
-                  className="flex items-center gap-2 relative text-base"
-                  size="lg"
-                  asChild
-                >
-                  <a
-                    href={bio.resume}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  variant="contained"
+                  size="large"
+                  startIcon={
                     <motion.span
                       initial={{ scale: 1 }}
                       animate={{
@@ -271,8 +279,13 @@ const HeroSection = () => {
                     >
                       <FileTextIcon />
                     </motion.span>
-                    Download CV
-                  </a>
+                  }
+                  href={bio.resume}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{ fontSize: "1rem" }}
+                >
+                  Download CV
                 </Button>
               </motion.div>
 
@@ -283,23 +296,11 @@ const HeroSection = () => {
                 whileTap="tap"
                 onHoverStart={() => setHoveredButton("contact")}
                 onHoverEnd={() => setHoveredButton(null)}
-                className="interactive-element cursor-pointer"
               >
                 <Button
-                  variant="outline"
-                  className="flex items-center gap-2 text-base"
-                  size="lg"
-                  asChild
-                >
-                  <Link
-                    to="contact"
-                    smooth={true}
-                    duration={800}
-                    offset={-80}
-                    spy={true}
-                    isDynamic={true}
-                    ignoreCancelEvents={false}
-                  >
+                  variant="outlined"
+                  size="large"
+                  startIcon={
                     <motion.span
                       initial={{ scale: 1 }}
                       animate={{
@@ -309,8 +310,18 @@ const HeroSection = () => {
                     >
                       <MailIcon />
                     </motion.span>
-                    Contact Me
-                  </Link>
+                  }
+                  component={Link}
+                  to="contact"
+                  smooth={true}
+                  duration={800}
+                  offset={-80}
+                  spy={true}
+                  isDynamic={true}
+                  ignoreCancelEvents={false}
+                  sx={{ fontSize: "1rem", cursor: "pointer" }}
+                >
+                  Contact Me
                 </Button>
               </motion.div>
             </Stack>

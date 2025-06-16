@@ -1,28 +1,35 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useData } from "../contexts/DataContext";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  Box,
+  Container,
+  Typography,
+  Tabs,
+  Tab,
+  Paper,
+  useTheme as useMuiTheme,
+} from "@mui/material";
 import SkillsCube from "./SkillsCube";
 import SkillsGrid from "./SkillsGrid";
-import { useTheme } from "next-themes";
+import { useTheme } from "../contexts/ThemeContext";
 
 const SkillsSection = () => {
   const { skills } = useData();
-  const [category, setCategory] = useState("all");
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  const [category, setCategory] = useState(0); // 0 = all, 1 = frontend, 2 = backend
+  const { theme } = useTheme();
+  const muiTheme = useMuiTheme();
+  const isDark = theme === "dark";
 
   // Filter skills based on selected category
-  const filteredSkills =
-    category === "all"
-      ? skills
-      : skills.filter((skill) => skill.category === category);
+  const filteredSkills = useMemo(() => {
+    if (category === 0) return skills; // all
+    if (category === 1)
+      return skills.filter((skill) => skill.category === "frontend");
+    if (category === 2)
+      return skills.filter((skill) => skill.category === "backend");
+    return skills;
+  }, [skills, category]);
 
   // Group skills by category for counting
   const frontendCount = skills.filter((s) => s.category === "frontend").length;
@@ -31,22 +38,22 @@ const SkillsSection = () => {
   // Define star background styles based on theme
   const starsStyle = {
     backgroundImage: isDark
-      ? `radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
-         radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
-         radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
-         radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
-         radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
-         radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0))`
-      : `radial-gradient(3px 3px at 20px 30px, #333, rgba(0,0,0,0)),
-         radial-gradient(3px 3px at 40px 70px, #444, rgba(0,0,0,0)),
-         radial-gradient(3px 3px at 50px 160px, #222, rgba(0,0,0,0)),
-         radial-gradient(3px 3px at 90px 40px, #333, rgba(0,0,0,0)),
-         radial-gradient(3px 3px at 130px 80px, #222, rgba(0,0,0,0)),
-         radial-gradient(3px 3px at 160px 120px, #111, rgba(0,0,0,0))`,
+      ? `radial-gradient(1px 1px at 20px 30px, ${muiTheme.palette.primary.light}, rgba(0,0,0,0)),
+         radial-gradient(1px 1px at 40px 70px, ${muiTheme.palette.primary.main}, rgba(0,0,0,0)),
+         radial-gradient(1px 1px at 50px 160px, ${muiTheme.palette.secondary.light}, rgba(0,0,0,0)),
+         radial-gradient(1px 1px at 90px 40px, ${muiTheme.palette.primary.light}, rgba(0,0,0,0)),
+         radial-gradient(1px 1px at 130px 80px, ${muiTheme.palette.primary.main}, rgba(0,0,0,0)),
+         radial-gradient(1px 1px at 160px 120px, ${muiTheme.palette.secondary.light}, rgba(0,0,0,0))`
+      : `radial-gradient(2px 2px at 20px 30px, ${muiTheme.palette.primary.main}, rgba(0,0,0,0)),
+         radial-gradient(2px 2px at 40px 70px, ${muiTheme.palette.secondary.main}, rgba(0,0,0,0)),
+         radial-gradient(2px 2px at 50px 160px, ${muiTheme.palette.primary.light}, rgba(0,0,0,0)),
+         radial-gradient(2px 2px at 90px 40px, ${muiTheme.palette.primary.main}, rgba(0,0,0,0)),
+         radial-gradient(2px 2px at 130px 80px, ${muiTheme.palette.secondary.main}, rgba(0,0,0,0)),
+         radial-gradient(2px 2px at 160px 120px, ${muiTheme.palette.primary.light}, rgba(0,0,0,0))`,
     backgroundRepeat: "repeat",
     backgroundSize: "200px 200px",
     animation: "twinkle 5s ease-in-out infinite",
-    opacity: isDark ? 0.6 : 0.3,
+    opacity: isDark ? 0.4 : 0.2,
   };
 
   // Create CSS for the twinkle animation
@@ -54,9 +61,9 @@ const SkillsSection = () => {
     const style = document.createElement("style");
     style.innerHTML = `
       @keyframes twinkle {
-        0% { opacity: ${isDark ? 0.6 : 0.3}; }
-        50% { opacity: ${isDark ? 0.9 : 0.6}; }
-        100% { opacity: ${isDark ? 0.6 : 0.3}; }
+        0% { opacity: ${isDark ? 0.4 : 0.2}; }
+        50% { opacity: ${isDark ? 0.7 : 0.4}; }
+        100% { opacity: ${isDark ? 0.4 : 0.2}; }
       }
     `;
     document.head.appendChild(style);
@@ -67,43 +74,130 @@ const SkillsSection = () => {
   }, [isDark]);
 
   return (
-    <section
+    <Box
+      component="section"
       id="skills"
-      className="bg-background/90 dark:bg-muted/20 relative overflow-hidden"
+      sx={{
+        position: "relative",
+        overflow: "hidden",
+        bgcolor: "background.default",
+        py: { xs: 8, md: 12 },
+      }}
     >
       {/* Background with stars */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.3)_0%,rgba(0,0,0,0)_80%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.25)_0%,rgba(0,0,0,0)_80%)]" />
-        <div className="stars absolute inset-0" style={starsStyle} />
-      </div>
+      <Box sx={{ position: "absolute", inset: 0 }}>
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            background: isDark
+              ? "radial-gradient(ellipse at center, rgba(96,165,250,0.1) 0%, rgba(0,0,0,0) 80%)"
+              : "radial-gradient(ellipse at center, rgba(59,130,246,0.05) 0%, rgba(0,0,0,0) 80%)",
+          }}
+        />
+        <Box
+          className="stars"
+          sx={{ position: "absolute", inset: 0 }}
+          style={starsStyle}
+        />
+      </Box>
 
-      <div className="container mx-auto relative z-10">
-        <h2 className="section-title">My Skills</h2>
+      <Container maxWidth="lg" sx={{ position: "relative", zIndex: 10 }}>
+        <Box sx={{ mb: 6, textAlign: "center" }}>
+          <Typography
+            variant="h2"
+            component="h2"
+            sx={{
+              fontSize: { xs: "2rem", md: "2.5rem" },
+              fontWeight: "bold",
+              mb: 1,
+              color: "primary.main",
+              textShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            }}
+          >
+            My Skills
+          </Typography>
+          <Box
+            sx={{
+              height: 4,
+              width: 80,
+              bgcolor: "primary.main",
+              mx: "auto",
+              borderRadius: 2,
+            }}
+          />
+        </Box>
 
-        <div className="max-w-5xl mx-auto mb-16">
-          <div className="flex flex-col md:flex-row gap-8 items-center">
-            <div className="w-full md:w-1/2 order-2 md:order-1">
+        <Box sx={{ maxWidth: "80rem", mx: "auto", mb: 8 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              gap: 4,
+              alignItems: "center",
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                maxWidth: { md: "50%" },
+                order: { xs: 2, md: 1 },
+              }}
+            >
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
               >
-                <h3 className="text-2xl md:text-3xl font-bold mb-4 gradient-text">
+                <Typography
+                  variant="h3"
+                  sx={{
+                    fontWeight: "bold",
+                    mb: 2,
+                    fontSize: { xs: "1.5rem", md: "1.875rem" },
+                    background: muiTheme.custom.gradients.primary,
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    color: "transparent",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
                   Core Expertise
-                </h3>
-                <p className="text-foreground/80 mb-6">
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "text.secondary",
+                    mb: 3,
+                    lineHeight: 1.7,
+                  }}
+                >
                   I specialize in creating beautiful, functional, and
                   user-centered digital experiences. With a focus on modern
                   technologies, I build responsive and performant applications.
-                </p>
-                <p className="text-foreground/70 mb-6">
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "text.primary",
+                    mb: 3,
+                    fontWeight: 500,
+                    fontSize: "0.95rem",
+                  }}
+                >
                   Interact with the 3D cube to explore my core skills!
-                </p>
+                </Typography>
               </motion.div>
-            </div>
+            </Box>
 
-            <div className="w-full md:w-1/2 order-1 md:order-2">
+            <Box
+              sx={{
+                width: "100%",
+                maxWidth: { md: "50%" },
+                order: { xs: 1, md: 2 },
+              }}
+            >
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -112,85 +206,66 @@ const SkillsSection = () => {
               >
                 <SkillsCube />
               </motion.div>
-            </div>
-          </div>
-        </div>
+            </Box>
+          </Box>
+        </Box>
 
-        <div className="relative max-w-7xl mx-auto pb-12">
-          {/* For larger screens: 3 column layout with 3D effects on sides */}
-
-          {/* Tabs in the middle */}
-          <div className="px-4">
-            <Tabs defaultValue="all" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-6">
-                <TabsTrigger value="all" onClick={() => setCategory("all")}>
-                  All ({skills.length})
-                </TabsTrigger>
-                <TabsTrigger
-                  value="frontend"
-                  onClick={() => setCategory("frontend")}
-                >
-                  Frontend ({frontendCount})
-                </TabsTrigger>
-                <TabsTrigger
-                  value="backend"
-                  onClick={() => setCategory("backend")}
-                >
-                  Backend ({backendCount})
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="all" className="mt-6">
-                <SkillsGrid skills={filteredSkills} />
-              </TabsContent>
-
-              <TabsContent value="frontend" className="mt-6">
-                <SkillsGrid skills={filteredSkills} />
-              </TabsContent>
-
-              <TabsContent value="backend" className="mt-6">
-                <SkillsGrid skills={filteredSkills} />
-              </TabsContent>
-            </Tabs>
-          </div>
-        </div>
-
-        {/* For mobile: Just tabs and content */}
-        <div className="md:hidden px-4">
-          <Tabs defaultValue="all" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="all" onClick={() => setCategory("all")}>
-                All ({skills.length})
-              </TabsTrigger>
-              <TabsTrigger
-                value="frontend"
-                onClick={() => setCategory("frontend")}
+        <Box
+          sx={{ position: "relative", maxWidth: "112rem", mx: "auto", pb: 6 }}
+        >
+          <Box sx={{ px: 2 }}>
+            <Paper
+              elevation={0}
+              sx={{
+                bgcolor: "transparent",
+                borderRadius: 2,
+              }}
+            >
+              <Tabs
+                value={category}
+                onChange={(_, newValue) => setCategory(newValue)}
+                variant="fullWidth"
+                sx={{
+                  mb: 3,
+                  "& .MuiTabs-indicator": {
+                    backgroundColor: "primary.main",
+                  },
+                }}
               >
-                Frontend ({frontendCount})
-              </TabsTrigger>
-              <TabsTrigger
-                value="backend"
-                onClick={() => setCategory("backend")}
-              >
-                Backend ({backendCount})
-              </TabsTrigger>
-            </TabsList>
+                <Tab
+                  label={`All (${skills.length})`}
+                  sx={{
+                    fontWeight: 500,
+                    textTransform: "none",
+                    fontSize: "1rem",
+                  }}
+                />
+                <Tab
+                  label={`Frontend (${frontendCount})`}
+                  sx={{
+                    fontWeight: 500,
+                    textTransform: "none",
+                    fontSize: "1rem",
+                  }}
+                />
+                <Tab
+                  label={`Backend (${backendCount})`}
+                  sx={{
+                    fontWeight: 500,
+                    textTransform: "none",
+                    fontSize: "1rem",
+                  }}
+                />
+              </Tabs>
 
-            <TabsContent value="all" className="mt-6">
-              <SkillsGrid skills={filteredSkills} />
-            </TabsContent>
-
-            <TabsContent value="frontend" className="mt-6">
-              <SkillsGrid skills={filteredSkills} />
-            </TabsContent>
-
-            <TabsContent value="backend" className="mt-6">
-              <SkillsGrid skills={filteredSkills} />
-            </TabsContent>
-          </Tabs>
-        </div>
-      </div>
-    </section>
+              <Box sx={{ mt: 3 }}>
+                <SkillsGrid skills={filteredSkills} />
+              </Box>
+            </Paper>
+          </Box>
+        </Box>
+      </Container>
+    </Box>
   );
 };
 
