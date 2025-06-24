@@ -117,7 +117,7 @@ const ResumeSection = () => {
           <Button
             variant="contained"
             size="large"
-            startIcon={<FileTextIcon style={{ fontSize: 18 }} />}
+            startIcon={<FileTextIcon sx={{ fontSize: 18 }} />}
             href="/krishnaMahato.pdf"
             target="_blank"
             rel="noopener noreferrer"
@@ -153,13 +153,13 @@ const ResumeSection = () => {
               }}
             >
               <Tab
-                icon={<BriefcaseIcon style={{ fontSize: 20 }} />}
+                icon={<BriefcaseIcon sx={{ fontSize: 20 }} />}
                 iconPosition="start"
                 label="Experience"
                 {...a11yProps(0)}
               />
               <Tab
-                icon={<BookIcon style={{ fontSize: 20 }} />}
+                icon={<BookIcon sx={{ fontSize: 20 }} />}
                 iconPosition="start"
                 label="Education"
                 {...a11yProps(1)}

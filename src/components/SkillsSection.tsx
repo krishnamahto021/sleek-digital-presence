@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useData } from "../contexts/DataContext";
 import {
@@ -35,44 +35,6 @@ const SkillsSection = () => {
   const frontendCount = skills.filter((s) => s.category === "frontend").length;
   const backendCount = skills.filter((s) => s.category === "backend").length;
 
-  // Define star background styles based on theme
-  const starsStyle = {
-    backgroundImage: isDark
-      ? `radial-gradient(1px 1px at 20px 30px, ${muiTheme.palette.primary.light}, rgba(0,0,0,0)),
-         radial-gradient(1px 1px at 40px 70px, ${muiTheme.palette.primary.main}, rgba(0,0,0,0)),
-         radial-gradient(1px 1px at 50px 160px, ${muiTheme.palette.secondary.light}, rgba(0,0,0,0)),
-         radial-gradient(1px 1px at 90px 40px, ${muiTheme.palette.primary.light}, rgba(0,0,0,0)),
-         radial-gradient(1px 1px at 130px 80px, ${muiTheme.palette.primary.main}, rgba(0,0,0,0)),
-         radial-gradient(1px 1px at 160px 120px, ${muiTheme.palette.secondary.light}, rgba(0,0,0,0))`
-      : `radial-gradient(2px 2px at 20px 30px, ${muiTheme.palette.primary.main}, rgba(0,0,0,0)),
-         radial-gradient(2px 2px at 40px 70px, ${muiTheme.palette.secondary.main}, rgba(0,0,0,0)),
-         radial-gradient(2px 2px at 50px 160px, ${muiTheme.palette.primary.light}, rgba(0,0,0,0)),
-         radial-gradient(2px 2px at 90px 40px, ${muiTheme.palette.primary.main}, rgba(0,0,0,0)),
-         radial-gradient(2px 2px at 130px 80px, ${muiTheme.palette.secondary.main}, rgba(0,0,0,0)),
-         radial-gradient(2px 2px at 160px 120px, ${muiTheme.palette.primary.light}, rgba(0,0,0,0))`,
-    backgroundRepeat: "repeat",
-    backgroundSize: "200px 200px",
-    animation: "twinkle 5s ease-in-out infinite",
-    opacity: isDark ? 0.4 : 0.2,
-  };
-
-  // Create CSS for the twinkle animation
-  useEffect(() => {
-    const style = document.createElement("style");
-    style.innerHTML = `
-      @keyframes twinkle {
-        0% { opacity: ${isDark ? 0.4 : 0.2}; }
-        50% { opacity: ${isDark ? 0.7 : 0.4}; }
-        100% { opacity: ${isDark ? 0.4 : 0.2}; }
-      }
-    `;
-    document.head.appendChild(style);
-
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, [isDark]);
-
   return (
     <Box
       component="section"
@@ -84,7 +46,7 @@ const SkillsSection = () => {
         py: { xs: 8, md: 12 },
       }}
     >
-      {/* Background with stars */}
+      {/* Background with MUI-based star effect */}
       <Box sx={{ position: "absolute", inset: 0 }}>
         <Box
           sx={{
@@ -96,9 +58,40 @@ const SkillsSection = () => {
           }}
         />
         <Box
-          className="stars"
-          sx={{ position: "absolute", inset: 0 }}
-          style={starsStyle}
+          sx={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: isDark
+              ? `radial-gradient(1px 1px at 20px 30px, ${muiTheme.palette.primary.light}, rgba(0,0,0,0)),
+                 radial-gradient(1px 1px at 40px 70px, ${muiTheme.palette.primary.main}, rgba(0,0,0,0)),
+                 radial-gradient(1px 1px at 50px 160px, ${muiTheme.palette.secondary.light}, rgba(0,0,0,0)),
+                 radial-gradient(1px 1px at 90px 40px, ${muiTheme.palette.primary.light}, rgba(0,0,0,0)),
+                 radial-gradient(1px 1px at 130px 80px, ${muiTheme.palette.primary.main}, rgba(0,0,0,0)),
+                 radial-gradient(1px 1px at 160px 120px, ${muiTheme.palette.secondary.light}, rgba(0,0,0,0))`
+              : `radial-gradient(2px 2px at 20px 30px, ${muiTheme.palette.primary.main}, rgba(0,0,0,0)),
+                 radial-gradient(2px 2px at 40px 70px, ${muiTheme.palette.secondary.main}, rgba(0,0,0,0)),
+                 radial-gradient(2px 2px at 50px 160px, ${muiTheme.palette.primary.light}, rgba(0,0,0,0)),
+                 radial-gradient(2px 2px at 90px 40px, ${muiTheme.palette.primary.main}, rgba(0,0,0,0)),
+                 radial-gradient(2px 2px at 130px 80px, ${muiTheme.palette.secondary.main}, rgba(0,0,0,0)),
+                 radial-gradient(2px 2px at 160px 120px, ${muiTheme.palette.primary.light}, rgba(0,0,0,0))`,
+            backgroundRepeat: "repeat",
+            backgroundSize: "200px 200px",
+            opacity: isDark ? 0.4 : 0.2,
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              animation: "twinkle 5s ease-in-out infinite",
+              backgroundImage: "inherit",
+              backgroundRepeat: "inherit",
+              backgroundSize: "inherit",
+            },
+            "@keyframes twinkle": {
+              "0%": { opacity: isDark ? 0.4 : 0.2 },
+              "50%": { opacity: isDark ? 0.7 : 0.4 },
+              "100%": { opacity: isDark ? 0.4 : 0.2 },
+            },
+          }}
         />
       </Box>
 

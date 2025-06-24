@@ -1,5 +1,7 @@
+import React, { useState } from "react";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
-import { useState } from "react";
+import { Box, useTheme } from "@mui/material";
+
 // Define props interface for Shape3D component
 interface Shape3DProps {
   position: string;
@@ -15,8 +17,44 @@ interface Shape3DProps {
     | "triangle";
 }
 
+// Helper function to parse position string and convert to CSS positioning
+const parsePosition = (position: string) => {
+  const styles: any = {};
+
+  // Parse left/right positioning
+  if (position.includes("left-")) {
+    const leftMatch = position.match(/left-\[(\d+)%\]/);
+    if (leftMatch) {
+      styles.left = leftMatch[1] + "%";
+    }
+  }
+  if (position.includes("right-")) {
+    const rightMatch = position.match(/right-\[(\d+)%\]/);
+    if (rightMatch) {
+      styles.right = rightMatch[1] + "%";
+    }
+  }
+
+  // Parse top/bottom positioning
+  if (position.includes("top-")) {
+    const topMatch = position.match(/top-\[(\d+)%\]/);
+    if (topMatch) {
+      styles.top = topMatch[1] + "%";
+    }
+  }
+  if (position.includes("bottom-")) {
+    const bottomMatch = position.match(/bottom-\[(\d+)%\]/);
+    if (bottomMatch) {
+      styles.bottom = bottomMatch[1] + "%";
+    }
+  }
+
+  return styles;
+};
+
 // 3D Shape component with mouse tracking effect
 const Shape3D = ({ position, color, delay, shape }: Shape3DProps) => {
+  const theme = useTheme();
   // Motion values for mouse tracking effect
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -44,73 +82,31 @@ const Shape3D = ({ position, color, delay, shape }: Shape3DProps) => {
     y.set((e.clientY - centerY) * sensitivity);
   };
 
-  // Generate CSS class based on color prop
-  const colorClass =
-    color === "primary"
-      ? "bg-primary/70"
-      : color === "secondary"
-      ? "bg-secondary/70"
-      : "bg-accent/70";
+  // Parse position string to get CSS positioning
+  const positionStyles = parsePosition(position);
 
-  // Additional CSS class for hover effect
-  const hoverColorClass =
-    color === "primary"
-      ? "group-hover:bg-primary/90"
-      : color === "secondary"
-      ? "group-hover:bg-secondary/90"
-      : "group-hover:bg-accent/90";
-
-  // Get hover animation based on shape type
-  const getHoverAnimation = () => {
-    const baseHover = {
-      scale: 1.2,
-      filter: "brightness(1.5)",
-      boxShadow: "0 0 20px rgba(255,255,255,0.3)",
-    };
-
-    switch (shape) {
-      case "cube":
+  // Get theme colors
+  const getShapeColor = () => {
+    switch (color) {
+      case "primary":
         return {
-          ...baseHover,
-          rotateX: 20,
-          rotateY: 20,
-          z: 30,
+          base: theme.palette.primary.main + "B3", // 70% opacity
+          hover: theme.palette.primary.main + "E6", // 90% opacity
         };
-      case "pyramid":
+      case "secondary":
         return {
-          ...baseHover,
-          rotateZ: 180,
-          y: -10,
-        };
-      case "sphere":
-        return {
-          ...baseHover,
-          scale: [1.1, 1.2, 1.15, 1.25, 1.2],
-          filter: "brightness(1.5) contrast(1.1)",
-          transition: { duration: 1, repeat: Infinity },
-        };
-      case "cylinder":
-        return {
-          ...baseHover,
-          scaleY: 1.3,
-          scaleX: 0.9,
-        };
-      case "donut":
-        return {
-          ...baseHover,
-          rotate: 90,
-          scale: 1.3,
-        };
-      case "triangle":
-        return {
-          ...baseHover,
-          rotate: -180,
-          y: 10,
+          base: theme.palette.secondary.main + "B3",
+          hover: theme.palette.secondary.main + "E6",
         };
       default:
-        return baseHover;
+        return {
+          base: theme.palette.primary.main + "B3",
+          hover: theme.palette.primary.main + "E6",
+        };
     }
   };
+
+  const shapeColors = getShapeColor();
 
   // Render different shapes based on the shape prop
   const renderShape = () => {
@@ -118,8 +114,14 @@ const Shape3D = ({ position, color, delay, shape }: Shape3DProps) => {
       case "cube":
         return (
           <motion.div
-            className="relative w-16 h-16 md:w-24 md:h-24 preserve-3d"
-            style={{ rotateX: springX, rotateY: springY }}
+            style={{
+              position: "relative",
+              width: "64px",
+              height: "64px",
+              transformStyle: "preserve-3d",
+              rotateX: springX,
+              rotateY: springY,
+            }}
             animate={{
               scale: [1, 1.05, 0.98, 1.02, 1],
               rotate: [0, 5, -5, 0],
@@ -137,20 +139,30 @@ const Shape3D = ({ position, color, delay, shape }: Shape3DProps) => {
               transition: { duration: 2, repeat: Infinity },
             }}
           >
-            <div
-              className={`absolute inset-0 ${colorClass} ${hoverColorClass} rounded-lg shadow-xl backdrop-blur-sm transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-primary/20`}
-              style={{ transform: "rotateY(15deg) rotateX(15deg)" }}
+            <Box
+              sx={{
+                position: "absolute",
+                inset: 0,
+                backgroundColor: shapeColors.base,
+                borderRadius: theme.custom.borderRadius.medium,
+                boxShadow: theme.custom.shadows.card,
+                backdropFilter: "blur(4px)",
+                transition: "all 0.3s ease",
+                transform: "rotateY(15deg) rotateX(15deg)",
+                width: { xs: "64px", md: "96px" },
+                height: { xs: "64px", md: "96px" },
+                "&:hover": {
+                  backgroundColor: shapeColors.hover,
+                  boxShadow: theme.custom.shadows.cardHover,
+                },
+              }}
             />
           </motion.div>
         );
+
       case "pyramid":
         return (
           <motion.div
-            className={`w-0 h-0 border-l-[20px] md:border-l-[30px] border-r-[20px] md:border-r-[30px] border-b-[40px] md:border-b-[60px] border-transparent ${
-              color === "primary"
-                ? "border-b-primary/70 group-hover:border-b-primary/90"
-                : "border-b-secondary/70 group-hover:border-b-secondary/90"
-            } shadow-xl transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-primary/20`}
             style={{ rotateX: springX, rotateY: springY }}
             animate={{
               scale: [1, 1.05, 0.98, 1.02, 1],
@@ -167,12 +179,37 @@ const Shape3D = ({ position, color, delay, shape }: Shape3DProps) => {
               rotate: [0, 60, 120, 180, 240, 300, 360],
               transition: { duration: 3, repeat: Infinity },
             }}
-          />
+          >
+            <Box
+              sx={{
+                width: 0,
+                height: 0,
+                borderLeft: {
+                  xs: "20px solid transparent",
+                  md: "30px solid transparent",
+                },
+                borderRight: {
+                  xs: "20px solid transparent",
+                  md: "30px solid transparent",
+                },
+                borderBottom: {
+                  xs: `40px solid ${shapeColors.base}`,
+                  md: `60px solid ${shapeColors.base}`,
+                },
+                boxShadow: theme.custom.shadows.card,
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  borderBottomColor: shapeColors.hover,
+                  boxShadow: theme.custom.shadows.cardHover,
+                },
+              }}
+            />
+          </motion.div>
         );
+
       case "sphere":
         return (
           <motion.div
-            className={`w-12 h-12 md:w-20 md:h-20 rounded-full ${colorClass} ${hoverColorClass} shadow-xl backdrop-blur-sm transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-primary/20`}
             style={{ rotateX: springX, rotateY: springY }}
             animate={{
               scale: [1, 1.1, 0.95, 1.05, 1],
@@ -191,12 +228,28 @@ const Shape3D = ({ position, color, delay, shape }: Shape3DProps) => {
               filter: "brightness(1.5) contrast(1.1)",
               transition: { duration: 1, repeat: Infinity },
             }}
-          />
+          >
+            <Box
+              sx={{
+                width: { xs: "48px", md: "80px" },
+                height: { xs: "48px", md: "80px" },
+                borderRadius: "50%",
+                backgroundColor: shapeColors.base,
+                boxShadow: theme.custom.shadows.card,
+                backdropFilter: "blur(4px)",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  backgroundColor: shapeColors.hover,
+                  boxShadow: theme.custom.shadows.cardHover,
+                },
+              }}
+            />
+          </motion.div>
         );
+
       case "cylinder":
         return (
           <motion.div
-            className={`w-10 h-16 md:w-16 md:h-24 rounded-full ${colorClass} ${hoverColorClass} shadow-xl backdrop-blur-sm transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-primary/20`}
             style={{ rotateX: springX, rotateY: springY }}
             animate={{
               scale: [1, 1.05, 0.98, 1.02, 1],
@@ -215,13 +268,35 @@ const Shape3D = ({ position, color, delay, shape }: Shape3DProps) => {
               scaleX: [1, 0.8, 0.9, 0.85, 0.8],
               transition: { duration: 1.5, repeat: Infinity },
             }}
-          />
+          >
+            <Box
+              sx={{
+                width: { xs: "40px", md: "64px" },
+                height: { xs: "64px", md: "96px" },
+                borderRadius: "50%",
+                backgroundColor: shapeColors.base,
+                boxShadow: theme.custom.shadows.card,
+                backdropFilter: "blur(4px)",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  backgroundColor: shapeColors.hover,
+                  boxShadow: theme.custom.shadows.cardHover,
+                },
+              }}
+            />
+          </motion.div>
         );
+
       case "donut":
         return (
           <motion.div
-            className="relative w-16 h-16 md:w-24 md:h-24"
-            style={{ rotateX: springX, rotateY: springY }}
+            style={{
+              position: "relative",
+              width: "64px",
+              height: "64px",
+              rotateX: springX,
+              rotateY: springY,
+            }}
             animate={{
               scale: [1, 1.05, 0.98, 1.02, 1],
               rotate: [0, 20, -20, 0],
@@ -238,11 +313,31 @@ const Shape3D = ({ position, color, delay, shape }: Shape3DProps) => {
               transition: { duration: 3, repeat: Infinity },
             }}
           >
-            <div
-              className={`absolute inset-0 rounded-full ${colorClass} ${hoverColorClass} shadow-xl backdrop-blur-sm transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-primary/20`}
-            ></div>
+            <Box
+              sx={{
+                position: "absolute",
+                inset: 0,
+                borderRadius: "50%",
+                backgroundColor: shapeColors.base,
+                boxShadow: theme.custom.shadows.card,
+                backdropFilter: "blur(4px)",
+                transition: "all 0.3s ease",
+                width: { xs: "64px", md: "96px" },
+                height: { xs: "64px", md: "96px" },
+                "&:hover": {
+                  backgroundColor: shapeColors.hover,
+                  boxShadow: theme.custom.shadows.cardHover,
+                },
+              }}
+            />
             <motion.div
-              className="absolute inset-0 flex items-center justify-center"
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
               animate={{
                 rotate: [0, -30, 30, 0],
                 transition: {
@@ -258,48 +353,31 @@ const Shape3D = ({ position, color, delay, shape }: Shape3DProps) => {
                 transition: { duration: 3, repeat: Infinity },
               }}
             >
-              <div className="w-6 h-6 md:w-10 md:h-10 rounded-full bg-background group-hover:bg-primary/20 transition-colors duration-300"></div>
+              <Box
+                sx={{
+                  width: { xs: "24px", md: "40px" },
+                  height: { xs: "24px", md: "40px" },
+                  borderRadius: "50%",
+                  backgroundColor: theme.palette.background.default,
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    backgroundColor: theme.palette.primary.main + "33", // 20% opacity
+                  },
+                }}
+              />
             </motion.div>
           </motion.div>
         );
+
       case "triangle":
         return (
           <motion.div
-            className={`w-0 h-0 border-l-[30px] md:border-l-[40px] border-r-[30px] md:border-r-[40px] border-t-[50px] md:border-t-[70px] border-transparent ${
-              color === "primary"
-                ? "border-t-primary/70 group-hover:border-t-primary/90"
-                : "border-t-secondary/70 group-hover:border-t-secondary/90"
-            } shadow-xl rotate-180 transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-primary/20`}
-            style={{ rotateX: springX, rotateY: springY }}
-            animate={{
-              scale: [1, 1.05, 0.98, 1.02, 1],
-              rotateZ: [180, 190, 170, 180],
-              x: [0, 8, -8, 0],
-              transition: {
-                duration: 7,
-                repeat: Infinity,
-                repeatType: "loop",
-                ease: "easeInOut",
-                delay: delay + 1.5,
-              },
-            }}
-            whileHover={{
-              rotateZ: [180, 0, 180],
-              y: [0, 15, 0],
-              transition: { duration: 2, repeat: Infinity },
-            }}
-          />
-        );
-      default:
-        return (
-          <motion.div
-            className={`w-12 h-12 md:w-16 md:h-16 rounded-lg ${colorClass} ${hoverColorClass} shadow-xl backdrop-blur-sm transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-primary/20`}
             style={{ rotateX: springX, rotateY: springY }}
             animate={{
               scale: [1, 1.05, 0.98, 1.02, 1],
               rotate: [0, 15, -15, 0],
               transition: {
-                duration: 5,
+                duration: 5.5,
                 repeat: Infinity,
                 repeatType: "loop",
                 ease: "easeInOut",
@@ -307,39 +385,79 @@ const Shape3D = ({ position, color, delay, shape }: Shape3DProps) => {
               },
             }}
             whileHover={{
-              rotate: [0, 45, -45, 0],
-              scale: [1, 1.2, 1.1, 1.3, 1.2],
+              rotate: [0, -180, -360],
+              y: [0, 10, 0],
               transition: { duration: 2, repeat: Infinity },
+            }}
+          >
+            <Box
+              sx={{
+                width: 0,
+                height: 0,
+                borderLeft: {
+                  xs: "25px solid transparent",
+                  md: "35px solid transparent",
+                },
+                borderRight: {
+                  xs: "25px solid transparent",
+                  md: "35px solid transparent",
+                },
+                borderBottom: {
+                  xs: `50px solid ${shapeColors.base}`,
+                  md: `70px solid ${shapeColors.base}`,
+                },
+                boxShadow: theme.custom.shadows.card,
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  borderBottomColor: shapeColors.hover,
+                  boxShadow: theme.custom.shadows.cardHover,
+                },
+              }}
+            />
+          </motion.div>
+        );
+
+      default:
+        return (
+          <Box
+            sx={{
+              width: { xs: "48px", md: "80px" },
+              height: { xs: "48px", md: "80px" },
+              borderRadius: "50%",
+              backgroundColor: shapeColors.base,
+              boxShadow: theme.custom.shadows.card,
             }}
           />
         );
     }
   };
 
-  // Simplified animation approach to avoid TypeScript issues
   return (
     <motion.div
-      className={`absolute ${position} z-10 cursor-pointer group`}
-      initial={{ y: 0, scale: 0.95 }}
+      style={{
+        position: "absolute",
+        zIndex: 5,
+        cursor: "pointer",
+        ...positionStyles, // Apply parsed position styles
+      }}
+      initial={{ opacity: 0, scale: 0.5 }}
       animate={{
-        y: [0, -15, 0],
-        scale: [0.95, 1, 0.95],
+        opacity: 1,
+        scale: 1,
+        transition: {
+          delay: delay * 0.2,
+          duration: 0.8,
+          ease: "easeOut",
+        },
       }}
-      transition={{
-        duration: 8,
-        repeat: Infinity,
-        repeatType: "loop",
-        ease: "easeInOut",
-        delay,
-      }}
-      whileHover={getHoverAnimation()}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
+      onMouseMove={handleMouseMove}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => {
         setIsHovered(false);
         x.set(0);
         y.set(0);
       }}
-      onMouseMove={handleMouseMove}
+      whileHover={{ scale: 1.1 }}
     >
       {renderShape()}
     </motion.div>

@@ -482,7 +482,7 @@ const ContactSection = () => {
                             variant="outlined"
                             href={generateMailtoLink()}
                             startIcon={
-                              <ExternalLinkIcon style={{ fontSize: 16 }} />
+                              <ExternalLinkIcon sx={{ fontSize: 16 }} />
                             }
                           >
                             Open Email Client
@@ -586,9 +586,9 @@ const ContactSection = () => {
                       loadingPosition="start"
                       startIcon={
                         isSubmitting ? (
-                          <Loader2Icon style={{ fontSize: 18 }} />
+                          <Loader2Icon sx={{ fontSize: 18 }} />
                         ) : (
-                          <SendIcon style={{ fontSize: 18 }} />
+                          <SendIcon sx={{ fontSize: 18 }} />
                         )
                       }
                       sx={{

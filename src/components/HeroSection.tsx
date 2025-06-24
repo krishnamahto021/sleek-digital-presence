@@ -228,151 +228,161 @@ const HeroSection = () => {
           </motion.div>
 
           <motion.div
-            custom={3}
-            initial="hidden"
-            animate="visible"
-            variants={textVariants}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
           >
             <Typography
-              variant="h5"
-              component="p"
+              variant="body1"
               sx={{
-                mb: theme.spacing(5),
-                maxWidth: "600px",
+                color: "text.secondary",
+                maxWidth: 600,
                 mx: "auto",
-                color: "text.primary",
+                lineHeight: 1.7,
+                mb: 4,
+                fontSize: { xs: "1rem", md: "1.125rem" },
               }}
             >
-              Crafting elegant MVPs that turn ideas into reality, fast.
+              {bio.shortDescription}
             </Typography>
           </motion.div>
 
+          {/* Action Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            style={{ width: "100%" }}
           >
             <Stack
               direction={{ xs: "column", sm: "row" }}
-              spacing={3}
-              alignItems="center"
-              justifyContent="center"
+              spacing={2}
+              sx={{
+                justifyContent: "center",
+                alignItems: "center",
+                maxWidth: 400,
+                mx: "auto",
+              }}
             >
               <motion.div
+                style={{ width: "100%" }}
                 variants={buttonVariants}
                 initial="initial"
                 whileHover="hover"
                 whileTap="tap"
-                onHoverStart={() => setHoveredButton("cv")}
+                onHoverStart={() => setHoveredButton("view-work")}
                 onHoverEnd={() => setHoveredButton(null)}
               >
-                <Button
-                  variant="contained"
-                  size="large"
-                  startIcon={
-                    <motion.span
-                      initial={{ scale: 1 }}
-                      animate={{
-                        scale: hoveredButton === "cv" ? [1, 1.2, 1] : 1,
-                      }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <FileTextIcon />
-                    </motion.span>
-                  }
-                  href={bio.resume}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{ fontSize: "1rem" }}
+                <Link
+                  to="projects"
+                  smooth={true}
+                  duration={800}
+                  offset={-80}
+                  style={{ textDecoration: "none", width: "100%" }}
                 >
-                  Download CV
-                </Button>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    startIcon={<FileTextIcon />}
+                    sx={{
+                      width: "100%",
+                      maxWidth: { xs: "100%", sm: 180 },
+                      py: 1.5,
+                      fontSize: "1rem",
+                      fontWeight: 600,
+                      borderRadius: theme.custom.borderRadius.medium,
+                      background: theme.custom.gradients.primary,
+                      "&:hover": {
+                        background: theme.custom.gradients.primary,
+                        opacity: 0.9,
+                      },
+                    }}
+                  >
+                    View My Work
+                  </Button>
+                </Link>
               </motion.div>
 
               <motion.div
+                style={{ width: "100%" }}
                 variants={buttonVariants}
                 initial="initial"
                 whileHover="hover"
                 whileTap="tap"
-                onHoverStart={() => setHoveredButton("contact")}
+                onHoverStart={() => setHoveredButton("get-in-touch")}
                 onHoverEnd={() => setHoveredButton(null)}
               >
-                <Button
-                  variant="outlined"
-                  size="large"
-                  startIcon={
-                    <motion.span
-                      initial={{ scale: 1 }}
-                      animate={{
-                        scale: hoveredButton === "contact" ? [1, 1.2, 1] : 1,
-                      }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <MailIcon />
-                    </motion.span>
-                  }
-                  component={Link}
+                <Link
                   to="contact"
                   smooth={true}
                   duration={800}
                   offset={-80}
-                  spy={true}
-                  isDynamic={true}
-                  ignoreCancelEvents={false}
-                  sx={{ fontSize: "1rem", cursor: "pointer" }}
+                  style={{ textDecoration: "none", width: "100%" }}
                 >
-                  Contact Me
-                </Button>
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    startIcon={<MailIcon />}
+                    sx={{
+                      width: "100%",
+                      maxWidth: { xs: "100%", sm: 180 },
+                      py: 1.5,
+                      fontSize: "1rem",
+                      fontWeight: 600,
+                      borderRadius: theme.custom.borderRadius.medium,
+                      borderWidth: 2,
+                      "&:hover": {
+                        borderWidth: 2,
+                        backgroundColor: "primary.main",
+                        color: "white",
+                      },
+                    }}
+                  >
+                    Get In Touch
+                  </Button>
+                </Link>
               </motion.div>
             </Stack>
           </motion.div>
-        </Box>
-      </Container>
 
-      {/* Scroll indicator with subtle animation */}
-      <motion.div
-        style={{
-          position: "absolute",
-          bottom: theme.spacing(5),
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 10,
-        }}
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.2, duration: 0.5 }}
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, repeatType: "loop" }}
-        >
-          <Link
-            to="about"
-            smooth={true}
-            duration={800}
-            offset={-80}
-            spy={true}
-            isDynamic={true}
-            ignoreCancelEvents={false}
-            style={{ cursor: "pointer" }}
+          {/* Scroll indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 1.5 }}
+            style={{
+              position: "absolute",
+              bottom: theme.spacing(4),
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
           >
-            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <Link
+              to="about"
+              smooth={true}
+              duration={800}
+              offset={-80}
+              style={{ cursor: "pointer" }}
+            >
               <Fab
-                color="primary"
                 size="small"
                 sx={{
-                  boxShadow: theme.custom.shadows.button,
+                  backgroundColor: "background.paper",
+                  color: "primary.main",
+                  backdropFilter: "blur(10px)",
                   "&:hover": {
-                    boxShadow: theme.custom.shadows.cardHover,
+                    backgroundColor: "primary.main",
+                    color: "white",
                   },
+                  animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
                 }}
               >
                 <ArrowDownIcon />
               </Fab>
-            </motion.div>
-          </Link>
-        </motion.div>
-      </motion.div>
+            </Link>
+          </motion.div>
+        </Box>
+      </Container>
     </Box>
   );
 };

@@ -20,6 +20,7 @@ import {
   ListItemText,
   useScrollTrigger,
   useTheme as useMuiTheme,
+  Button,
 } from "@mui/material";
 import { useTheme } from "../contexts/ThemeContext";
 import { useData } from "../contexts/DataContext";
@@ -29,6 +30,7 @@ const Navbar = () => {
   const muiTheme = useMuiTheme();
   const { bio } = useData();
   const [isOpen, setIsOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("hero");
 
   // Use MUI's scroll trigger for better performance
   const trigger = useScrollTrigger({
@@ -115,32 +117,47 @@ const Navbar = () => {
               smooth={true}
               offset={-80}
               duration={800}
-              className="nav-link"
               activeClass="active"
               isDynamic={true}
               ignoreCancelEvents={false}
-              style={{
-                padding: "8px 16px",
-                cursor: "pointer",
-                borderRadius: "8px",
-                transition: "all 0.3s ease",
-                textDecoration: "none",
-              }}
+              onSetActive={() => setActiveSection(link.to)}
+              style={{ textDecoration: "none" }}
             >
-              <Typography
-                variant="body1"
+              <Button
                 sx={{
-                  fontWeight: 500,
+                  px: 2,
+                  py: 1,
+                  cursor: "pointer",
+                  borderRadius: muiTheme.custom.borderRadius.medium,
+                  transition: "all 0.3s ease",
                   color: muiTheme.palette.text.primary,
+                  fontSize: { xs: "0.875rem", md: "1rem" },
+                  fontWeight: 500,
+                  position: "relative",
+                  textTransform: "none",
                   "&:hover": {
+                    backgroundColor: muiTheme.palette.action.hover,
                     color: muiTheme.palette.primary.main,
                   },
-                  transition: "color 0.3s ease",
-                  cursor: "pointer",
+                  // Active state styling
+                  ...(activeSection === link.to && {
+                    color: muiTheme.palette.primary.main,
+                    "&::after": {
+                      content: '""',
+                      position: "absolute",
+                      bottom: 0,
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      width: "50%",
+                      height: 2,
+                      backgroundColor: muiTheme.palette.primary.main,
+                      borderRadius: 9999,
+                    },
+                  }),
                 }}
               >
                 {link.title}
-              </Typography>
+              </Button>
             </Link>
           ))}
 
@@ -149,7 +166,7 @@ const Navbar = () => {
             sx={{
               ml: 1,
               padding: "8px 16px",
-              borderRadius: "8px",
+              borderRadius: muiTheme.custom.borderRadius.medium,
               minWidth: 48,
               height: 40,
               display: "flex",
@@ -198,81 +215,108 @@ const Navbar = () => {
 
           <IconButton
             onClick={toggleMenu}
-            aria-label="Toggle menu"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
             sx={{
-              width: 40,
-              height: 40,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              width: 44,
+              height: 44,
+              borderRadius: muiTheme.custom.borderRadius.medium,
               color: muiTheme.palette.text.primary,
               "&:hover": {
                 backgroundColor: muiTheme.palette.action.hover,
                 color: muiTheme.palette.primary.main,
               },
-              cursor: "pointer",
             }}
           >
             {isOpen ? <CloseIcon /> : <MenuIcon />}
           </IconButton>
         </Box>
 
-        {/* Mobile Menu Drawer */}
+        {/* Mobile Drawer */}
         <Drawer
-          anchor="top"
+          anchor="right"
           open={isOpen}
           onClose={closeMenu}
           sx={{
             display: { xs: "block", md: "none" },
             "& .MuiDrawer-paper": {
+              width: 280,
               backgroundColor: muiTheme.palette.background.paper,
-              backdropFilter: "blur(10px)",
-              borderBottom: `1px solid ${muiTheme.palette.divider}`,
-              // Full width mobile menu, no margins, no border radius, no top gap
-              left: "0 !important",
-              right: "0 !important",
-              width: "100% !important",
-              top: { xs: "56px !important", sm: "64px !important" }, // Tight positioning under navbar
-              borderRadius: "0 !important",
-              marginTop: "0 !important",
+              backdropFilter: "blur(20px)",
+              borderLeft: `1px solid ${muiTheme.palette.divider}`,
             },
           }}
         >
-          <List sx={{ px: { xs: 2, sm: 3 } }}>
+          <Box
+            sx={{
+              pt: 2,
+              pb: 1,
+              px: 2,
+              borderBottom: `1px solid ${muiTheme.palette.divider}`,
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                color: muiTheme.palette.text.primary,
+                textAlign: "center",
+              }}
+            >
+              {bio.name.split(" ")[0]}
+              <Box component="span" sx={{ color: "primary.main" }}>
+                .
+              </Box>
+            </Typography>
+          </Box>
+
+          <List sx={{ px: 1, py: 2 }}>
             {navLinks.map((link) => (
               <ListItem key={link.to} disablePadding>
-                <ListItemButton
-                  onClick={closeMenu}
-                  sx={{
-                    py: 2,
-                    px: { xs: 2, sm: 3 },
-                    "&:hover": {
-                      backgroundColor: muiTheme.palette.action.hover,
-                      "& .MuiListItemText-primary": {
-                        color: muiTheme.palette.primary.main,
-                      },
-                    },
+                <Link
+                  to={link.to}
+                  smooth={true}
+                  duration={800}
+                  offset={-80}
+                  spy={true}
+                  isDynamic={true}
+                  ignoreCancelEvents={false}
+                  onSetActive={() => setActiveSection(link.to)}
+                  style={{
+                    textDecoration: "none",
+                    width: "100%",
                     cursor: "pointer",
                   }}
+                  onClick={closeMenu}
                 >
-                  <Link
-                    to={link.to}
-                    spy={true}
-                    smooth={true}
-                    offset={-80}
-                    duration={800}
-                    activeClass="text-primary"
-                    isDynamic={true}
-                    ignoreCancelEvents={false}
-                    style={{
-                      width: "100%",
-                      textDecoration: "none",
-                      cursor: "pointer",
+                  <ListItemButton
+                    sx={{
+                      borderRadius: muiTheme.custom.borderRadius.medium,
+                      mx: 1,
+                      my: 0.5,
+                      "&:hover": {
+                        backgroundColor: muiTheme.palette.action.hover,
+                      },
+                      // Active state
+                      ...(activeSection === link.to && {
+                        backgroundColor: muiTheme.palette.primary.light + "20",
+                        color: muiTheme.palette.primary.main,
+                      }),
                     }}
                   >
-                    <ListItemText primary={link.title} />
-                  </Link>
-                </ListItemButton>
+                    <ListItemText
+                      primary={link.title}
+                      primaryTypographyProps={{
+                        fontWeight: activeSection === link.to ? 600 : 500,
+                        color:
+                          activeSection === link.to
+                            ? muiTheme.palette.primary.main
+                            : muiTheme.palette.text.primary,
+                      }}
+                    />
+                  </ListItemButton>
+                </Link>
               </ListItem>
             ))}
           </List>
